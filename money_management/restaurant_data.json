@@ -1,0 +1,41 @@
+{
+    "orders": [
+        {
+            "id": 1,
+            "date": "2026-10-13",
+            "time": "23:28:30",
+            "amount": 500.0,
+            "payment_method": "Cash"
+        },
+        {
+            "id": 2,
+            "date": "2026-10-13",
+            "time": "23:29:26",
+            "amount": 500.0,
+            "payment_method": "Card"
+        },
+        {
+            "id": 3,
+            "table": "Bàn 1",
+            "date": "2026-10-13",
+            "time": "23:39:34",
+            "amount": 175000,
+            "payment_method": "Cash",
+            "items": [
+                {
+                    "name": "Bún Chả Hà Nội",
+                    "price": 50000
+                },
+                {
+                    "name": "Mì Xào Hải Sản",
+                    "price": 60000
+                },
+                {
+                    "name": "Phở Bò Đặc Biệt",
+                    "price": 65000
+                }
+            ]
+        }
+    ],
+    "expenses": []
+}

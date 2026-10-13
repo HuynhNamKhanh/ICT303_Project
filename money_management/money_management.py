@@ -1,1055 +1,787 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
+﻿from datetime import datetime, timedelta
 import json
 import os
-from datetime import datetime, timedelta
+import tkinter as tk
+from tkinter import messagebox, ttk
+from PIL import Image, ImageTk
 
 DATA_FILE = "restaurant_data.json"
 
+MENU = {
+    "Main Courses": {
+        "Special Beef Pho": {
+            "price": 65000,
+            "image": "images/pho.png",
+        },
+        "Grilled Pork Chop Rice": {
+            "price": 55000,
+            "image": "images/pork_rice.png",
+        },
+        "Hanoi Bun Cha": {"price": 50000, "image": "images/buncha.png"},
+        "Seafood Fried Noodles": {
+            "price": 60000,
+            "image": "images/noodles.png",
+        },
+    },
+    "Beverages": {
+        "Coca Cola": {"price": 15000, "image": "images/coca.png"},
+        "Ice Tea": {"price": 5000, "image": "images/icetea.png"},
+        "Fresh Orange Juice": {
+            "price": 30000,
+            "image": "images/orange_juice.png",
+        },
+        "Heineken Beer": {"price": 25000, "image": "images/beer.png"},
+    },
+    "Appetizers / Snacks": {
+        "French Fries": {"price": 30000, "image": "images/fries.png"},
+        "Spring Rolls": {"price": 40000, "image": "images/spring_rolls.png"},
+        "Crab Soup": {"price": 35000, "image": "images/crab_soup.png"},
+    },
+}
+
+
 def load_data():
-    """Load restaurant data from JSON file."""
+  """Load restaurant data from JSON file."""
+  if not os.path.exists(DATA_FILE):
+    return {"orders": [], "expenses": []}
 
-    if not os.path.exists(DATA_FILE):
-        return {
-            "orders": [],
-            "expenses": []
-        }
-
-    try:
-        with open(DATA_FILE, "r") as file:
-            data = json.load(file)
-
-            if "orders" not in data:
-                data["orders"] = []
-
-            if "expenses" not in data:
-                data["expenses"] = []
-
-            return data
-
-    except (json.JSONDecodeError, FileNotFoundError):
-        return {
-            "orders": [],
-            "expenses": []
-        }
+  try:
+    with open(DATA_FILE, "r", encoding="utf-8") as file:
+      data = json.load(file)
+      if "orders" not in data:
+        data["orders"] = []
+      if "expenses" not in data:
+        data["expenses"] = []
+      return data
+  except (json.JSONDecodeError, FileNotFoundError):
+    return {"orders": [], "expenses": []}
 
 
 def save_data():
-    """Save all data to JSON file."""
+  """Save all data to JSON file."""
+  with open(DATA_FILE, "w", encoding="utf-8") as file:
+    json.dump(data, file, indent=4, ensure_ascii=False)
 
-    with open(DATA_FILE, "w") as file:
-        json.dump(data, file, indent=4)
 
 data = load_data()
 
-def get_today():
-    """Return today's date."""
 
-    return datetime.now().strftime("%Y-%m-%d")
+def get_today():
+  return datetime.now().strftime("%Y-%m-%d")
 
 
 def get_current_time():
-    """Return current time."""
-
-    return datetime.now().strftime("%H:%M:%S")
+  return datetime.now().strftime("%H:%M:%S")
 
 
 def get_next_order_id():
-    """Generate the next order ID."""
-
-    if not data["orders"]:
-        return 1
-
-    return max(order["id"] for order in data["orders"]) + 1
+  if not data["orders"]:
+    return 1
+  return max(order["id"] for order in data["orders"]) + 1
 
 
 def calculate_daily_totals(date):
-    """Calculate cash, card, sales, expenses and profit."""
+  cash = 0
+  card = 0
+  expenses = 0
 
-    cash = 0
-    card = 0
-    expenses = 0
+  for order in data["orders"]:
+    if order["date"] == date:
+      if order["payment_method"] == "Cash":
+        cash += order["amount"]
+      elif order["payment_method"] == "Card":
+        card += order["amount"]
 
-    # Calculate sales
-    for order in data["orders"]:
+  for expense in data["expenses"]:
+    if expense["date"] == date:
+      expenses += expense["amount"]
 
-        if order["date"] == date:
+  total_sales = cash + card
+  profit = total_sales - expenses
+  return cash, card, total_sales, expenses, profit
 
-            if order["payment_method"] == "Cash":
-                cash += order["amount"]
 
-            elif order["payment_method"] == "Card":
-                card += order["amount"]
-
-    # Calculate expenses
-    for expense in data["expenses"]:
-
-        if expense["date"] == date:
-            expenses += expense["amount"]
-
-    total_sales = cash + card
-    profit = total_sales - expenses
-
-    return cash, card, total_sales, expenses, profit
-
+# MAIN INTERFACE
 root = tk.Tk()
-
-root.title("Restaurant Management System")
-root.geometry("1000x650")
-root.minsize(900, 600)
-
+root.title("Restaurant Management System - POS with Images")
+root.geometry("1050x720")
+root.minsize(950, 650)
 root.configure(bg="#f2f2f2")
 
 title_label = tk.Label(
     root,
-    text="RESTAURANT MANAGEMENT SYSTEM",
-    font=("Arial", 22, "bold"),
-    bg="#f2f2f2"
+    text="RESTAURANT MANAGEMENT SYSTEM (POS)",
+    font=("Arial", 20, "bold"),
+    bg="#f2f2f2",
 )
+title_label.pack(pady=10)
 
-title_label.pack(pady=20)
-
-top_frame = tk.Frame(
-    root,
-    bg="#f2f2f2"
-)
-
-top_frame.pack(pady=5)
-
+top_frame = tk.Frame(root, bg="#f2f2f2")
+top_frame.pack(pady=2)
 
 date_label = tk.Label(
-    top_frame,
-    text="Date:",
-    font=("Arial", 12),
-    bg="#f2f2f2"
+    top_frame, text="Working Date:", font=("Arial", 11), bg="#f2f2f2"
 )
-
 date_label.grid(row=0, column=0, padx=5)
 
-
 today_label = tk.Label(
-    top_frame,
-    text=get_today(),
-    font=("Arial", 12, "bold"),
-    bg="#f2f2f2"
+    top_frame, text=get_today(), font=("Arial", 11, "bold"), bg="#f2f2f2"
 )
-
 today_label.grid(row=0, column=1, padx=5)
 
+# 1. Order & Menu Frame
 order_frame = tk.LabelFrame(
     root,
-    text="New Order / Customer Payment",
-    font=("Arial", 13, "bold"),
+    text="New Order & Menu Selection",
+    font=("Arial", 12, "bold"),
     padx=15,
-    pady=15
+    pady=10,
 )
+order_frame.pack(fill="x", padx=30, pady=5)
 
-order_frame.pack(
-    fill="x",
-    padx=30,
-    pady=10
+# Table Selection
+tk.Label(order_frame, text="Table:", font=("Arial", 11)).grid(
+    row=0, column=0, padx=5, pady=5, sticky="w"
 )
-
-
-# Amount
-
-amount_label = tk.Label(
+table_var = tk.StringVar(value="Table 1")
+table_combo = ttk.Combobox(
     order_frame,
-    text="Order Amount ($):",
-    font=("Arial", 11)
+    textvariable=table_var,
+    values=[f"Table {i}" for i in range(1, 16)],
+    state="readonly",
+    width=10,
 )
+table_combo.grid(row=0, column=1, padx=5, pady=5, sticky="w")
 
-amount_label.grid(
-    row=0,
-    column=0,
-    padx=10,
-    pady=10
+# Payment Method
+tk.Label(order_frame, text="Payment:", font=("Arial", 11)).grid(
+    row=0, column=2, padx=5, pady=5, sticky="w"
 )
-
-
-amount_entry = tk.Entry(
-    order_frame,
-    width=20,
-    font=("Arial", 11)
-)
-
-amount_entry.grid(
-    row=0,
-    column=1,
-    padx=10,
-    pady=10
-)
-
-
-# Payment method
-
-payment_label = tk.Label(
-    order_frame,
-    text="Payment Method:",
-    font=("Arial", 11)
-)
-
-payment_label.grid(
-    row=0,
-    column=2,
-    padx=10,
-    pady=10
-)
-
-
-payment_var = tk.StringVar()
-
+payment_var = tk.StringVar(value="Cash")
 payment_combo = ttk.Combobox(
     order_frame,
     textvariable=payment_var,
     values=["Cash", "Card"],
     state="readonly",
-    width=15
+    width=10,
 )
+payment_combo.grid(row=0, column=3, padx=5, pady=5, sticky="w")
 
-payment_combo.grid(
-    row=0,
-    column=3,
-    padx=10,
-    pady=10
-)
+current_order_items = []
 
-payment_combo.set("Cash")
+# Danh sách giữ tham chiếu ảnh để tránh bị Garbage Collection của Python xóa mất
+img_references = []
 
-def add_order():
 
-    amount_text = amount_entry.get().strip()
-    payment_method = payment_var.get()
+# Menu Window Selection with Images Preview
+def open_menu_window():
+  global img_references
+  img_references = []  # Clear references cũ
 
-    # Check amount
-    try:
-        amount = float(amount_text)
+  menu_win = tk.Toplevel(root)
+  menu_win.title("Restaurant Menu with Images")
+  menu_win.geometry("750x550")
 
-        if amount <= 0:
-            raise ValueError
+  tk.Label(
+      menu_win, text="RESTAURANT MENU CATALOG", font=("Arial", 14, "bold")
+  ).pack(pady=10)
 
-    except ValueError:
-        messagebox.showerror(
-            "Invalid Amount",
-            "Please enter a valid amount greater than 0."
-        )
-        return
+  notebook = ttk.Notebook(menu_win)
+  notebook.pack(fill="both", expand=True, padx=15, pady=5)
 
-    # Check payment method
-    if payment_method not in ["Cash", "Card"]:
-        messagebox.showerror(
-            "Payment Method",
-            "Please select Cash or Card."
-        )
-        return
+  selected_items_temp = list(current_order_items)
 
-    # Create order
-    order = {
-        "id": get_next_order_id(),
-        "date": get_today(),
-        "time": get_current_time(),
-        "amount": amount,
-        "payment_method": payment_method
-    }
+  bottom_frame = tk.Frame(menu_win, padx=10, pady=10)
+  bottom_frame.pack(fill="x", padx=15)
 
-    data["orders"].append(order)
+  selected_lbl = tk.Label(
+      bottom_frame,
+      text=f"Selected: {len(selected_items_temp)} items",
+      font=("Arial", 11, "bold"),
+      fg="#27ae60",
+  )
+  selected_lbl.pack(side=tk.LEFT)
 
-    save_data()
+  for category, items in MENU.items():
+    tab = ttk.Frame(notebook)
+    notebook.add(tab, text=category)
 
-    messagebox.showinfo(
-        "Success",
-        f"Order #{order['id']} added successfully."
+    # Frame chứa danh sách món (bên trái) và khung xem trước ảnh (bên phải)
+    left_sub_frame = tk.Frame(tab)
+    left_sub_frame.pack(
+        side=tk.LEFT, fill="both", expand=True, padx=5, pady=5
     )
 
-    amount_entry.delete(0, tk.END)
+    right_sub_frame = tk.LabelFrame(
+        tab, text="Image Preview", font=("Arial", 10, "bold"), width=200, padx=10
+    )
+    right_sub_frame.pack(
+        side=tk.RIGHT, fill="y", expand=False, padx=5, pady=5
+    )
+    right_sub_frame.pack_propagate(False)
 
-    update_dashboard()
-    refresh_orders()
+    img_label = tk.Label(
+        right_sub_frame,
+        text="No image\nselected",
+        bg="#e0e0e0",
+        font=("Arial", 10),
+    )
+    img_label.pack(fill="both", expand=True, padx=5, pady=5)
+
+    tree = ttk.Treeview(
+        left_sub_frame, columns=("item", "price"), show="headings", height=10
+    )
+    tree.heading("item", text="Item Name")
+    tree.heading("price", text="Price ($)")
+    tree.column("item", width=220)
+    tree.column("price", width=120, anchor="e")
+    tree.pack(fill="both", expand=True, padx=5, pady=5)
+
+    for item_name, info in items.items():
+      tree.insert(
+          "",
+          tk.END,
+          values=(item_name, f"{info['price']:,.0f} $"),
+          tag=(info["image"], info["price"]),
+      )
+
+    # Sự kiện khi click chọn món trên bảng -> Hiển thị hình ảnh tương ứng
+    def on_item_select(event, t=tree, lbl=img_label, cat=category):
+      selected_item = t.selection()
+      if not selected_item:
+        return
+      item_values = t.item(selected_item[0], "values")
+      item_name = item_values[0]
+      img_path = MENU[cat][item_name]["image"]
+
+      if os.path.exists(img_path):
+        try:
+          # Mở ảnh và resize về kích thước 150x150 pixel
+          pil_img = Image.open(img_path)
+          pil_img = pil_img.resize((150, 150), Image.Resampling.LANCZOS)
+          tk_img = ImageTk.PhotoImage(pil_img)
+
+          lbl.config(image=tk_img, text="")
+          # Giữ tham chiếu để ảnh không bị biến mất do bộ gom rác Python
+          img_references.append(tk_img)
+        except Exception as e:
+          lbl.config(image="", text="Load image error")
+      else:
+        lbl.config(image="", text="Image not found\n(Check folder 'images')")
+
+    tree.bind("<<TreeviewSelect>>", on_item_select)
+
+    def add_item_to_order(t=tree, cat=category):
+      selected_item = t.selection()
+      if not selected_item:
+        messagebox.showwarning("Warning", "Please select an item from the list!")
+        return
+      item_values = t.item(selected_item[0], "values")
+      item_name = item_values[0]
+      item_price = MENU[cat][item_name]["price"]
+
+      selected_items_temp.append({"name": item_name, "price": item_price})
+      selected_lbl.config(
+          text=f"Selected: {len(selected_items_temp)} items in order"
+      )
+
+    add_btn = tk.Button(
+        tab,
+        text="➕ Add Item to Order",
+        bg="#2ecc71",
+        fg="white",
+        font=("Arial", 10, "bold"),
+        command=add_item_to_order,
+    )
+    add_btn.pack(pady=5)
+
+  def confirm_selection():
+    global current_order_items
+    current_order_items = selected_items_temp
+    total_amount = sum(item["price"] for item in current_order_items)
+    order_summary_label.config(
+        text=(
+            f"Table: {table_var.get()} | Items: {len(current_order_items)} |"
+            f" Total: {total_amount:,.0f} $"
+        )
+    )
+    menu_win.destroy()
+
+  confirm_btn = tk.Button(
+      bottom_frame,
+      text="Confirm Selection",
+      bg="#3498db",
+      fg="white",
+      font=("Arial", 11, "bold"),
+      command=confirm_selection,
+  )
+  confirm_btn.pack(side=tk.RIGHT)
 
 
-add_order_button = tk.Button(
-    order_frame,
-    text="ADD ORDER",
+# Summary & Action Buttons
+order_summary_frame = tk.Frame(order_frame, bg="#ffffff", padx=10, pady=8)
+order_summary_frame.grid(row=1, column=0, columnspan=6, sticky="we", pady=5)
+
+order_summary_label = tk.Label(
+    order_summary_frame,
+    text="Table: Table 1 | Items: 0 | Total: 0 $",
     font=("Arial", 11, "bold"),
-    width=15,
-    command=add_order
+    bg="#ffffff",
+    fg="#e74c3c",
 )
+order_summary_label.pack(side=tk.LEFT)
 
-add_order_button.grid(
-    row=0,
-    column=4,
-    padx=20
+open_menu_btn = tk.Button(
+    order_frame,
+    text="📖 OPEN MENU & IMAGES",
+    font=("Arial", 10, "bold"),
+    bg="#9b59b6",
+    fg="white",
+    command=open_menu_window,
 )
+open_menu_btn.grid(row=0, column=4, padx=10, pady=5)
 
+
+def save_current_order():
+  global current_order_items
+  if not current_order_items:
+    messagebox.showwarning("Empty", "No items selected for this order yet!")
+    return
+
+  total_amount = sum(item["price"] for item in current_order_items)
+
+  order = {
+      "id": get_next_order_id(),
+      "table": table_var.get(),
+      "date": get_today(),
+      "time": get_current_time(),
+      "amount": total_amount,
+      "payment_method": payment_var.get(),
+      "items": list(current_order_items),
+  }
+
+  data["orders"].append(order)
+  save_data()
+  messagebox.showinfo(
+      "Success",
+      f"Order saved for {order['table']} with total amount"
+      f" {total_amount:,.0f} $!",
+  )
+
+  current_order_items = []
+  order_summary_label.config(text="Table: Table 1 | Items: 0 | Total: 0 $")
+  update_dashboard()
+
+
+checkout_btn = tk.Button(
+    order_frame,
+    text="💾 SAVE & CHECKOUT",
+    font=("Arial", 10, "bold"),
+    bg="#e67e22",
+    fg="white",
+    command=save_current_order,
+)
+checkout_btn.grid(row=0, column=5, padx=10, pady=5)
+
+
+# 2. Expense Frame
 expense_frame = tk.LabelFrame(
-    root,
-    text="Daily Expense",
-    font=("Arial", 13, "bold"),
-    padx=15,
-    pady=15
+    root, text="Daily Expense Management", font=("Arial", 12, "bold"), padx=15, pady=10
 )
+expense_frame.pack(fill="x", padx=30, pady=5)
 
-expense_frame.pack(
-    fill="x",
-    padx=30,
-    pady=10
+tk.Label(expense_frame, text="Expense Amount ($):", font=("Arial", 11)).grid(
+    row=0, column=0, padx=5, pady=5
 )
+expense_entry = tk.Entry(expense_frame, width=15, font=("Arial", 11))
+expense_entry.grid(row=0, column=1, padx=5, pady=5)
 
-
-expense_label = tk.Label(
-    expense_frame,
-    text="Expense Amount ($):",
-    font=("Arial", 11)
+tk.Label(expense_frame, text="Description:", font=("Arial", 11)).grid(
+    row=0, column=2, padx=5, pady=5
 )
+description_entry = tk.Entry(expense_frame, width=22, font=("Arial", 11))
+description_entry.grid(row=0, column=3, padx=5, pady=5)
 
-expense_label.grid(
-    row=0,
-    column=0,
-    padx=10,
-    pady=10
-)
-
-
-expense_entry = tk.Entry(
-    expense_frame,
-    width=20,
-    font=("Arial", 11)
-)
-
-expense_entry.grid(
-    row=0,
-    column=1,
-    padx=10,
-    pady=10
-)
-
-
-description_label = tk.Label(
-    expense_frame,
-    text="Description:",
-    font=("Arial", 11)
-)
-
-description_label.grid(
-    row=0,
-    column=2,
-    padx=10,
-    pady=10
-)
-
-
-description_entry = tk.Entry(
-    expense_frame,
-    width=25,
-    font=("Arial", 11)
-)
-
-description_entry.grid(
-    row=0,
-    column=3,
-    padx=10,
-    pady=10
-)
 
 def add_expense():
+  amount_text = expense_entry.get().strip()
+  description = description_entry.get().strip()
 
-    amount_text = expense_entry.get().strip()
-    description = description_entry.get().strip()
-
-    try:
-        amount = float(amount_text)
-
-        if amount <= 0:
-            raise ValueError
-
-    except ValueError:
-        messagebox.showerror(
-            "Invalid Amount",
-            "Please enter a valid expense amount."
-        )
-        return
-
-    if description == "":
-        description = "General Expense"
-
-    expense = {
-        "id": len(data["expenses"]) + 1,
-        "date": get_today(),
-        "time": get_current_time(),
-        "amount": amount,
-        "description": description
-    }
-
-    data["expenses"].append(expense)
-
-    save_data()
-
-    messagebox.showinfo(
-        "Success",
-        "Expense added successfully."
+  try:
+    amount = float(amount_text)
+    if amount <= 0:
+      raise ValueError
+  except ValueError:
+    messagebox.showerror(
+        "Error", "Please enter a valid expense amount greater than 0."
     )
+    return
 
-    expense_entry.delete(0, tk.END)
-    description_entry.delete(0, tk.END)
+  if not description:
+    description = "General Expense"
 
-    update_dashboard()
+  expense = {
+      "id": len(data["expenses"]) + 1,
+      "date": get_today(),
+      "time": get_current_time(),
+      "amount": amount,
+      "description": description,
+  }
+
+  data["expenses"].append(expense)
+  save_data()
+  messagebox.showinfo("Success", "Expense recorded successfully.")
+  expense_entry.delete(0, tk.END)
+  description_entry.delete(0, tk.END)
+  update_dashboard()
 
 
-add_expense_button = tk.Button(
+add_expense_btn = tk.Button(
     expense_frame,
     text="ADD EXPENSE",
-    font=("Arial", 11, "bold"),
-    width=15,
-    command=add_expense
+    font=("Arial", 10, "bold"),
+    bg="#c0392b",
+    fg="white",
+    command=add_expense,
 )
+add_expense_btn.grid(row=0, column=4, padx=15, pady=5)
 
-add_expense_button.grid(
-    row=0,
-    column=4,
-    padx=20
-)
 
+# 3. Dashboard Frame
 dashboard_frame = tk.LabelFrame(
-    root,
-    text="Today's Summary",
-    font=("Arial", 13, "bold"),
-    padx=15,
-    pady=15
+    root, text="Today's Revenue Summary", font=("Arial", 12, "bold"), padx=15, pady=10
+)
+dashboard_frame.pack(fill="x", padx=30, pady=5)
+
+cash_value = tk.Label(dashboard_frame, text="0 $", font=("Arial", 12, "bold"))
+cash_value.grid(row=0, column=1, padx=15)
+tk.Label(dashboard_frame, text="Cash Sales", font=("Arial", 10)).grid(
+    row=1, column=1
 )
 
-dashboard_frame.pack(
-    fill="x",
-    padx=30,
-    pady=10
+card_value = tk.Label(dashboard_frame, text="0 $", font=("Arial", 12, "bold"))
+card_value.grid(row=0, column=2, padx=15)
+tk.Label(dashboard_frame, text="Card Sales", font=("Arial", 10)).grid(
+    row=1, column=2
 )
 
-
-cash_value = tk.Label(
-    dashboard_frame,
-    text="$0.00",
-    font=("Arial", 14, "bold")
+sales_value = tk.Label(dashboard_frame, text="0 $", font=("Arial", 12, "bold"))
+sales_value.grid(row=0, column=3, padx=15)
+tk.Label(dashboard_frame, text="Total Revenue", font=("Arial", 10)).grid(
+    row=1, column=3
 )
-
-cash_value.grid(
-    row=0,
-    column=1,
-    padx=25
-)
-
-
-cash_label = tk.Label(
-    dashboard_frame,
-    text="Cash Sales",
-    font=("Arial", 11)
-)
-
-cash_label.grid(
-    row=1,
-    column=1
-)
-
-
-card_value = tk.Label(
-    dashboard_frame,
-    text="$0.00",
-    font=("Arial", 14, "bold")
-)
-
-card_value.grid(
-    row=0,
-    column=2,
-    padx=25
-)
-
-
-card_label = tk.Label(
-    dashboard_frame,
-    text="Card Sales",
-    font=("Arial", 11)
-)
-
-card_label.grid(
-    row=1,
-    column=2
-)
-
-
-sales_value = tk.Label(
-    dashboard_frame,
-    text="$0.00",
-    font=("Arial", 14, "bold")
-)
-
-sales_value.grid(
-    row=0,
-    column=3,
-    padx=25
-)
-
-
-sales_label = tk.Label(
-    dashboard_frame,
-    text="Total Sales",
-    font=("Arial", 11)
-)
-
-sales_label.grid(
-    row=1,
-    column=3
-)
-
 
 expenses_value = tk.Label(
-    dashboard_frame,
-    text="$0.00",
-    font=("Arial", 14, "bold")
+    dashboard_frame, text="0 $", font=("Arial", 12, "bold"), fg="#c0392b"
 )
-
-expenses_value.grid(
-    row=0,
-    column=4,
-    padx=25
+expenses_value.grid(row=0, column=4, padx=15)
+tk.Label(dashboard_frame, text="Total Expenses", font=("Arial", 10)).grid(
+    row=1, column=4
 )
-
-
-expenses_label = tk.Label(
-    dashboard_frame,
-    text="Expenses",
-    font=("Arial", 11)
-)
-
-expenses_label.grid(
-    row=1,
-    column=4
-)
-
 
 profit_value = tk.Label(
-    dashboard_frame,
-    text="$0.00",
-    font=("Arial", 14, "bold")
+    dashboard_frame, text="0 $", font=("Arial", 12, "bold"), fg="#27ae60"
+)
+profit_value.grid(row=0, column=5, padx=15)
+tk.Label(dashboard_frame, text="Net Profit", font=("Arial", 10)).grid(
+    row=1, column=5
 )
 
-profit_value.grid(
-    row=0,
-    column=5,
-    padx=25
-)
-
-
-profit_label = tk.Label(
-    dashboard_frame,
-    text="Net Profit",
-    font=("Arial", 11)
-)
-
-profit_label.grid(
-    row=1,
-    column=5
-)
-
-
-# =========================================================
-# UPDATE DASHBOARD
-# =========================================================
 
 def update_dashboard():
+  today = get_today()
+  cash, card, sales, expenses, profit = calculate_daily_totals(today)
+  cash_value.config(text=f"{cash:,.0f} $")
+  card_value.config(text=f"{card:,.0f} $")
+  sales_value.config(text=f"{sales:,.0f} $")
+  expenses_value.config(text=f"{expenses:,.0f} $")
+  profit_value.config(text=f"{profit:,.0f} $")
 
-    today = get_today()
 
-    cash, card, sales, expenses, profit = calculate_daily_totals(today)
+# NAVIGATION BUTTONS
+button_frame = tk.Frame(root, bg="#f2f2f2")
+button_frame.pack(pady=10)
 
-    cash_value.config(
-        text=f"${cash:,.2f}"
-    )
-
-    card_value.config(
-        text=f"${card:,.2f}"
-    )
-
-    sales_value.config(
-        text=f"${sales:,.2f}"
-    )
-
-    expenses_value.config(
-        text=f"${expenses:,.2f}"
-    )
-
-    profit_value.config(
-        text=f"${profit:,.2f}"
-    )
-
-button_frame = tk.Frame(
-    root,
-    bg="#f2f2f2"
-)
-
-button_frame.pack(
-    pady=15
-)
 
 def view_orders():
+  window = tk.Toplevel(root)
+  window.title("Order History")
+  window.geometry("850x450")
+  tk.Label(
+      window, text="CUSTOMER ORDERS LIST", font=("Arial", 14, "bold")
+  ).pack(pady=10)
 
-    window = tk.Toplevel(root)
+  columns = ("id", "table", "date", "time", "amount", "payment", "items")
+  tree = ttk.Treeview(window, columns=columns, show="headings")
+  tree.heading("id", text="ID")
+  tree.heading("table", text="Table")
+  tree.heading("date", text="Date")
+  tree.heading("time", text="Time")
+  tree.heading("amount", text="Total")
+  tree.heading("payment", text="Payment")
+  tree.heading("items", text="Order Details")
 
-    window.title("Orders")
-    window.geometry("800x450")
+  tree.column("id", width=40)
+  tree.column("table", width=70)
+  tree.column("date", width=90)
+  tree.column("time", width=70)
+  tree.column("amount", width=100)
+  tree.column("payment", width=80)
+  tree.column("items", width=350)
 
-    title = tk.Label(
-        window,
-        text="ALL CUSTOMER ORDERS",
-        font=("Arial", 16, "bold")
+  tree.pack(fill="both", expand=True, padx=15, pady=10)
+
+  for order in data["orders"]:
+    items_str = ", ".join(
+        [
+            f"{item['name']} ({item['price']:,.0f})"
+            for item in order.get("items", [])
+        ]
+    )
+    tree.insert(
+        "",
+        tk.END,
+        values=(
+            order["id"],
+            order.get("table", "Table ?"),
+            order["date"],
+            order["time"],
+            f"{order['amount']:,.0f} $",
+            order["payment_method"],
+            items_str,
+        ),
     )
 
-    title.pack(pady=10)
-
-    columns = (
-        "id",
-        "date",
-        "time",
-        "amount",
-        "payment"
-    )
-
-    tree = ttk.Treeview(
-        window,
-        columns=columns,
-        show="headings"
-    )
-
-    tree.heading("id", text="Order ID")
-    tree.heading("date", text="Date")
-    tree.heading("time", text="Time")
-    tree.heading("amount", text="Amount")
-    tree.heading("payment", text="Payment")
-
-    tree.column("id", width=80)
-    tree.column("date", width=120)
-    tree.column("time", width=100)
-    tree.column("amount", width=120)
-    tree.column("payment", width=120)
-
-    tree.pack(
-        fill="both",
-        expand=True,
-        padx=20,
-        pady=10
-    )
-
-    for order in data["orders"]:
-
-        tree.insert(
-            "",
-            tk.END,
-            values=(
-                order["id"],
-                order["date"],
-                order["time"],
-                f"${order['amount']:.2f}",
-                order["payment_method"]
-            )
-        )
 
 def daily_report():
+  window = tk.Toplevel(root)
+  window.title("Daily Report")
+  window.geometry("450x350")
+  tk.Label(
+      window, text="DAILY FINANCIAL REPORT", font=("Arial", 14, "bold")
+  ).pack(pady=15)
 
-    window = tk.Toplevel(root)
+  date = get_today()
+  cash, card, sales, expenses, profit = calculate_daily_totals(date)
+  report_text = (
+      f"Date: {date}\n\n"
+      f"💵 Cash Sales:        {cash:,.0f} $\n"
+      f"💳 Card Sales:        {card:,.0f} $\n"
+      f"💰 Total Revenue:     {sales:,.0f} $\n"
+      f"💸 Total Expenses:    {expenses:,.0f} $\n"
+      f"📈 Net Profit:        {profit:,.0f} $"
+  )
+  tk.Label(window, text=report_text, font=("Arial", 12), justify="left").pack(
+      pady=10
+  )
 
-    window.title("Daily Report")
-    window.geometry("600x500")
-
-    title = tk.Label(
-        window,
-        text="DAILY FINANCIAL REPORT",
-        font=("Arial", 18, "bold")
-    )
-
-    title.pack(pady=20)
-
-    date = get_today()
-
-    cash, card, sales, expenses, profit = calculate_daily_totals(date)
-
-    report_text = (
-        f"Date: {date}\n\n"
-        f"Cash Sales:       ${cash:,.2f}\n\n"
-        f"Card Sales:       ${card:,.2f}\n\n"
-        f"Total Sales:      ${sales:,.2f}\n\n"
-        f"Total Expenses:   ${expenses:,.2f}\n\n"
-        f"Net Profit:       ${profit:,.2f}"
-    )
-
-    report_label = tk.Label(
-        window,
-        text=report_text,
-        font=("Arial", 13),
-        justify="left"
-    )
-
-    report_label.pack(
-        pady=20
-    )
 
 def weekly_report():
+  window = tk.Toplevel(root)
+  window.title("Weekly Report")
+  window.geometry("750x520")
+  tk.Label(
+      window, text="WEEKLY / MULTI-DAY SUMMARY", font=("Arial", 14, "bold")
+  ).pack(pady=10)
 
-    window = tk.Toplevel(root)
+  input_frame = tk.Frame(window)
+  input_frame.pack(pady=5)
 
-    window.title("Weekly Report")
-    window.geometry("800x600")
+  tk.Label(input_frame, text="Start Date (YYYY-MM-DD):").grid(
+      row=0, column=0, padx=5
+  )
+  start_entry = tk.Entry(input_frame, width=15)
+  start_entry.grid(row=0, column=1, padx=5)
+  start_entry.insert(0, get_today())
 
-    title = tk.Label(
-        window,
-        text="WEEKLY FINANCIAL REPORT",
-        font=("Arial", 18, "bold")
+  result_text = tk.Text(window, width=75, height=18, font=("Courier New", 10))
+  result_text.pack(padx=20, pady=10)
+
+  def generate_report():
+    try:
+      start_date = datetime.strptime(
+          start_entry.get().strip(), "%Y-%m-%d"
+      ).date()
+    except ValueError:
+      messagebox.showerror("Error", "Invalid date format (YYYY-MM-DD).")
+      return
+
+    end_date = start_date + timedelta(days=6)
+    result_text.delete("1.0", tk.END)
+    result_text.insert(
+        tk.END,
+        f"--- SUMMARY FROM {start_date} TO {end_date} ---\n\n",
     )
 
-    title.pack(pady=15)
+    for i in range(7):
+      current_date = start_date + timedelta(days=i)
+      date_str = current_date.strftime("%Y-%m-%d")
+      _, _, sales, expenses, profit = calculate_daily_totals(date_str)
+      result_text.insert(
+          tk.END,
+          f"Date: {date_str} | Revenue: {sales:,.0f} | Expenses:"
+          f" {expenses:,.0f} | Profit: {profit:,.0f} $\n",
+      )
 
-    input_frame = tk.Frame(window)
+  tk.Button(
+      input_frame,
+      text="Generate Summary",
+      bg="#2980b9",
+      fg="white",
+      command=generate_report,
+  ).grid(row=0, column=2, padx=5)
+  generate_report()
 
-    input_frame.pack(pady=10)
 
-    start_label = tk.Label(
-        input_frame,
-        text="Week starting date (YYYY-MM-DD):"
+def view_chart():
+  window = tk.Toplevel(root)
+  window.title("Sales Chart")
+  window.geometry("720x420")
+  window.configure(bg="#ffffff")
+
+  tk.Label(
+      window,
+      text="LAST 7 DAYS CHART (REVENUE & PROFIT)",
+      font=("Arial", 12, "bold"),
+      bg="#ffffff",
+  ).pack(pady=10)
+
+  canvas = tk.Canvas(window, width=680, height=300, bg="#f9f9f9")
+  canvas.pack(pady=5)
+
+  dates = []
+  sales_list = []
+  profits_list = []
+
+  end_date = datetime.now().date()
+  start_date = end_date - timedelta(days=6)
+
+  for i in range(7):
+    current_date = start_date + timedelta(days=i)
+    date_str = current_date.strftime("%Y-%m-%d")
+    dates.append(current_date.strftime("%d/%m"))
+    _, _, sales, _, profit = calculate_daily_totals(date_str)
+    sales_list.append(sales)
+    profits_list.append(profit)
+
+  max_val = max(sales_list + profits_list) if (sales_list + profits_list) else 1
+  if max_val == 0:
+    max_val = 1
+
+  canvas_width = 680
+  canvas_height = 300
+  margin_left = 60
+  margin_bottom = 35
+  chart_width = canvas_width - margin_left - 30
+  chart_height = canvas_height - margin_bottom - 30
+
+  canvas.create_line(
+      margin_left,
+      canvas_height - margin_bottom,
+      canvas_width - 15,
+      canvas_height - margin_bottom,
+      fill="black",
+      width=2,
+  )
+  canvas.create_line(
+      margin_left,
+      15,
+      margin_left,
+      canvas_height - margin_bottom,
+      fill="black",
+      width=2,
+  )
+
+  for i in range(5):
+    val = max_val * (i / 4)
+    y_pos = (canvas_height - margin_bottom) - (val / max_val) * chart_height
+    canvas.create_line(
+        margin_left - 5, y_pos, margin_left, y_pos, fill="black"
+    )
+    canvas.create_text(
+        margin_left - 10,
+        y_pos,
+        text=f"{val:,.0f}",
+        anchor="e",
+        font=("Arial", 8),
     )
 
-    start_label.grid(
-        row=0,
-        column=0,
-        padx=5
+  num_bars = len(dates)
+  group_width = chart_width / num_bars
+
+  for i in range(num_bars):
+    group_x = margin_left + i * group_width + group_width / 2
+    bar_width = group_width * 0.35
+
+    sales_h = (sales_list[i] / max_val) * chart_height
+    canvas.create_rectangle(
+        group_x - bar_width - 2,
+        (canvas_height - margin_bottom) - sales_h,
+        group_x - 2,
+        canvas_height - margin_bottom,
+        fill="#3498db",
     )
 
-    start_entry = tk.Entry(
-        input_frame,
-        width=15
+    profit_h = (max(0, profits_list[i]) / max_val) * chart_height
+    canvas.create_rectangle(
+        group_x + 2,
+        (canvas_height - margin_bottom) - profit_h,
+        group_x + bar_width + 2,
+        canvas_height - margin_bottom,
+        fill="#2ecc71",
     )
 
-    start_entry.grid(
-        row=0,
-        column=1,
-        padx=5
+    canvas.create_text(
+        group_x,
+        canvas_height - margin_bottom + 12,
+        text=dates[i],
+        font=("Arial", 9),
     )
 
-    start_entry.insert(
-        0,
-        get_today()
-    )
+  canvas.create_rectangle(
+      margin_left + 30, 8, margin_left + 45, 18, fill="#3498db"
+  )
+  canvas.create_text(
+      margin_left + 50, 13, text="Revenue", anchor="w", font=("Arial", 9)
+  )
+  canvas.create_rectangle(
+      margin_left + 130, 8, margin_left + 145, 18, fill="#2ecc71"
+  )
+  canvas.create_text(
+      margin_left + 150, 13, text="Profit", anchor="w", font=("Arial", 9)
+  )
 
-    result_text = tk.Text(
-        window,
-        width=80,
-        height=25,
-        font=("Courier New", 10)
-    )
 
-    result_text.pack(
-        padx=20,
-        pady=10
-    )
-
-    def generate_report():
-
-        start_date_text = start_entry.get().strip()
-
-        try:
-            start_date = datetime.strptime(
-                start_date_text,
-                "%Y-%m-%d"
-            ).date()
-
-        except ValueError:
-
-            messagebox.showerror(
-                "Invalid Date",
-                "Please enter the date in YYYY-MM-DD format."
-            )
-
-            return
-
-        end_date = start_date + timedelta(days=6)
-
-        weekly_orders = []
-        weekly_expenses = []
-
-        for order in data["orders"]:
-
-            order_date = datetime.strptime(
-                order["date"],
-                "%Y-%m-%d"
-            ).date()
-
-            if start_date <= order_date <= end_date:
-                weekly_orders.append(order)
-
-        for expense in data["expenses"]:
-
-            expense_date = datetime.strptime(
-                expense["date"],
-                "%Y-%m-%d"
-            ).date()
-
-            if start_date <= expense_date <= end_date:
-                weekly_expenses.append(expense)
-
-        cash = 0
-        card = 0
-
-        for order in weekly_orders:
-
-            if order["payment_method"] == "Cash":
-                cash += order["amount"]
-
-            elif order["payment_method"] == "Card":
-                card += order["amount"]
-
-        total_sales = cash + card
-
-        total_expenses = sum(
-            expense["amount"]
-            for expense in weekly_expenses
-        )
-
-        profit = total_sales - total_expenses
-
-        result_text.delete(
-            "1.0",
-            tk.END
-        )
-
-        result_text.insert(
-            tk.END,
-            "====================================================\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "                 WEEKLY REPORT\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "====================================================\n\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Week: {start_date} to {end_date}\n\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Cash Sales:       ${cash:,.2f}\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Card Sales:       ${card:,.2f}\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Total Sales:      ${total_sales:,.2f}\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Total Expenses:   ${total_expenses:,.2f}\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            f"Net Profit:       ${profit:,.2f}\n\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "----------------------------------------------------\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "DAILY BREAKDOWN\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "----------------------------------------------------\n\n"
-        )
-
-        for i in range(7):
-
-            current_date = start_date + timedelta(days=i)
-
-            date_string = current_date.strftime(
-                "%Y-%m-%d"
-            )
-
-            day_cash = 0
-            day_card = 0
-            day_expenses = 0
-
-            for order in weekly_orders:
-
-                if order["date"] == date_string:
-
-                    if order["payment_method"] == "Cash":
-                        day_cash += order["amount"]
-
-                    elif order["payment_method"] == "Card":
-                        day_card += order["amount"]
-
-            for expense in weekly_expenses:
-
-                if expense["date"] == date_string:
-                    day_expenses += expense["amount"]
-
-            day_sales = day_cash + day_card
-            day_profit = day_sales - day_expenses
-
-            result_text.insert(
-                tk.END,
-                f"{date_string}\n"
-                f"  Cash:     ${day_cash:,.2f}\n"
-                f"  Card:     ${day_card:,.2f}\n"
-                f"  Sales:    ${day_sales:,.2f}\n"
-                f"  Expenses: ${day_expenses:,.2f}\n"
-                f"  Profit:   ${day_profit:,.2f}\n\n"
-            )
-
-    generate_button = tk.Button(
-        input_frame,
-        text="GENERATE REPORT",
-        command=generate_report,
-        font=("Arial", 10, "bold")
-    )
-
-    generate_button.grid(
-        row=0,
-        column=2,
-        padx=10
-    )
-
-def view_expenses():
-
-    window = tk.Toplevel(root)
-
-    window.title("Expenses")
-    window.geometry("700x450")
-
-    title = tk.Label(
-        window,
-        text="EXPENSE RECORDS",
-        font=("Arial", 16, "bold")
-    )
-
-    title.pack(pady=10)
-
-    columns = (
-        "id",
-        "date",
-        "time",
-        "amount",
-        "description"
-    )
-
-    tree = ttk.Treeview(
-        window,
-        columns=columns,
-        show="headings"
-    )
-
-    tree.heading("id", text="ID")
-    tree.heading("date", text="Date")
-    tree.heading("time", text="Time")
-    tree.heading("amount", text="Amount")
-    tree.heading("description", text="Description")
-
-    tree.column("id", width=50)
-    tree.column("date", width=110)
-    tree.column("time", width=90)
-    tree.column("amount", width=100)
-    tree.column("description", width=250)
-
-    tree.pack(
-        fill="both",
-        expand=True,
-        padx=20,
-        pady=10
-    )
-
-    for expense in data["expenses"]:
-
-        tree.insert(
-            "",
-            tk.END,
-            values=(
-                expense["id"],
-                expense["date"],
-                expense["time"],
-                f"${expense['amount']:.2f}",
-                expense["description"]
-            )
-        )
-
-view_orders_button = tk.Button(
+tk.Button(
     button_frame,
-    text="VIEW ORDERS",
+    text="📋 VIEW ORDERS",
     width=16,
     font=("Arial", 10, "bold"),
-    command=view_orders
-)
-
-view_orders_button.grid(
-    row=0,
-    column=0,
-    padx=5
-)
-
-
-daily_report_button = tk.Button(
+    command=view_orders,
+).grid(row=0, column=0, padx=4)
+tk.Button(
     button_frame,
-    text="DAILY REPORT",
+    text="📊 DAILY REPORT",
     width=16,
     font=("Arial", 10, "bold"),
-    command=daily_report
-)
-
-daily_report_button.grid(
-    row=0,
-    column=1,
-    padx=5
-)
-
-
-weekly_report_button = tk.Button(
+    command=daily_report,
+).grid(row=0, column=1, padx=4)
+tk.Button(
     button_frame,
-    text="WEEKLY REPORT",
+    text="📅 WEEKLY REPORT",
     width=16,
     font=("Arial", 10, "bold"),
-    command=weekly_report
-)
-
-weekly_report_button.grid(
-    row=0,
-    column=2,
-    padx=5
-)
-
-
-expenses_button = tk.Button(
+    command=weekly_report,
+).grid(row=0, column=2, padx=4)
+tk.Button(
     button_frame,
-    text="VIEW EXPENSES",
+    text="📈 SALES CHART",
     width=16,
     font=("Arial", 10, "bold"),
-    command=view_expenses
-)
-
-expenses_button.grid(
-    row=0,
-    column=3,
-    padx=5
-)
+    bg="#e67e22",
+    fg="white",
+    command=view_chart,
+).grid(row=0, column=3, padx=4)
 
 update_dashboard()
-
 root.mainloop()
