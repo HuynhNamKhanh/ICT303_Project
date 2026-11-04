@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\money_management.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:money_management.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\run.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:run.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Com_nha_application_final.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "money_management.py",
-              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\money_management.py",
-              "RelativeDocumentMoniker": "money_management.py",
-              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\money_management.py",
-              "RelativeToolTip": "money_management.py",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAA8AAAAjAAAAAAAAAA==",
+              "Title": "run.py",
+              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\run.py",
+              "RelativeDocumentMoniker": "run.py",
+              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\run.py",
+              "RelativeToolTip": "run.py",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAA4AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
-              "WhenOpened": "2026-09-29T14:46:41.613Z",
+              "WhenOpened": "2026-11-04T00:46:59.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Com_nha_application_final.html",
+              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html",
+              "RelativeDocumentMoniker": "Com_nha_application_final.html",
+              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html",
+              "RelativeToolTip": "Com_nha_application_final.html",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAAAA4AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-11-04T00:44:23.895Z",
               "EditorCaption": ""
             }
           ]

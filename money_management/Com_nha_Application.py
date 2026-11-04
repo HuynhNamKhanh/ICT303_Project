@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import tkinter as tk
 from datetime import datetime, timedelta
@@ -20,13 +20,13 @@ MENU = {
         "Special Beef Pho": {"price": 30, "image": "pho.png"},
         "Grilled Pork Chop Rice": {"price": 30, "image": "pork_rice.png"},
         "Hanoi Bun Cha": {"price": 30, "image": "buncha.png"},
-        "Seafood Fried Noodles": {"price": 30, "image": "noodles.png"},
+        "Seafood Fried Noodles": {"price": 40, "image": "noodles.png"},
     },
     "Beverages": {
-        "Coca Cola": {"price": 30, "image": "coca.png"},
-        "Ice Tea": {"price": 30, "image": "icetea.png"},
-        "Fresh Orange Juice": {"price": 30, "image": "orange_juice.png"},
-        "Heineken Beer": {"price": 30, "image": "beer.png"},
+        "Coca Cola": {"price": 5, "image": "coca.png"},
+        "Ice Tea": {"price": 5, "image": "icetea.png"},
+        "Fresh Orange Juice": {"price": 5, "image": "orange_juice.png"},
+        "Heineken Beer": {"price": 10, "image": "beer.png"},
     },
     "Appetizers / Snacks": {
         "French Fries": {"price": 30, "image": "fries.png"},
@@ -338,7 +338,7 @@ for col, (key, caption, color) in enumerate([
         ("cash", "Cash Sales", "black"), ("card", "Card Sales", "black"),
         ("sales", "Total Revenue", "black"), ("expenses", "Total Expenses", "#c0392b"),
         ("profit", "Net Profit", "#27ae60")], start=1):
-    lbl = tk.Label(dashboard_frame, text="$ 0", font=("Arial", 12, "bold"), fg=color)
+    lbl = tk.Label(dashboard_frame, text="0 d", font=("Arial", 12, "bold"), fg=color)
     lbl.grid(row=0, column=col, padx=15)
     tk.Label(dashboard_frame, text=caption, font=("Arial", 10)).grid(row=1, column=col)
     dash_labels[key] = lbl
