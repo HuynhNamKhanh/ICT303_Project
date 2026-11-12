@@ -1,184 +1,626 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cơm Nhà – Restaurant Management (demo)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{--jade:#1f4d3a;--jade2:#2d6a50;--rice:#fbfbf6;--line:#d9d4c3;--ink:#23302a;--mute:#6b746e;--chili:#c8322a;--gold:#b8923a;--soft:#eef2ea}
-*{box-sizing:border-box}
-body{margin:0;background:var(--rice);color:var(--ink);font:15px/1.5 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:var(--jade);color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-h1{margin:0;font-size:22px;font-weight:700}
-header small{opacity:.8}
-main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
-.notice{background:var(--soft);border-left:4px solid var(--gold);padding:8px 12px;margin-bottom:16px;font-size:13px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line);margin-bottom:18px}
-.stats div{padding:10px 14px;border-right:1px solid var(--line)}
-.stats div:last-child{border:0}
-.stats span{display:block;color:var(--mute);font-size:12px}
-.stats b{font-size:18px}
-.stats .loss{color:var(--chili)}
-nav{display:flex;gap:4px;border-bottom:2px solid var(--jade);margin-bottom:16px;flex-wrap:wrap}
-nav button{border:0;background:none;padding:10px 16px;font:inherit;font-weight:500;cursor:pointer;color:var(--mute)}
-nav button.on{background:var(--jade);color:#fff}
-.panel{display:none}.panel.on{display:block}
-.layout{display:grid;grid-template-columns:1.6fr 1fr;gap:24px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.chip{border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:20px;font:inherit;cursor:pointer}
-.chip.on{background:var(--jade2);color:#fff;border-color:var(--jade2)}
-.dish{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.pic{width:72px;height:72px;border-radius:6px;background:var(--soft);position:relative;overflow:hidden;display:grid;place-items:center;font-size:32px}
-.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.dish b{display:block}.dish .price{color:var(--chili);font-weight:700}
-.btn{border:0;background:var(--jade);color:#fff;padding:8px 14px;border-radius:6px;font:inherit;font-weight:500;cursor:pointer}
-.btn:hover{background:var(--jade2)}
-.btn.alt{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.btn.red{background:var(--chili)}
-.qb:focus-visible,.rm:focus-visible,.btn:focus-visible,.chip:focus-visible,nav button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.side{border:1px solid var(--line);padding:16px;align-self:start;background:#fff}
-.side h2,.panel h2{margin:0 0 10px;font-size:17px}
-label{display:block;font-size:13px;color:var(--mute);margin:8px 0 3px}
-input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;width:100%;background:#fff}
-.pay{display:flex;gap:16px;margin:4px 0}.pay label{display:flex;align-items:center;gap:6px;color:var(--ink);margin:0}.pay input{width:auto}
-.line{padding:8px 0;border-bottom:1px dashed var(--line)}
-.lt{display:flex;justify-content:space-between;gap:8px}
-.lc{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
-.q{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.qb{border:0;background:var(--soft);width:34px;height:30px;font:inherit;font-size:18px;cursor:pointer}
-.qb:hover{background:var(--line)}
-.q output{min-width:36px;text-align:center;font-weight:700}
-.rm{border:0;background:none;color:var(--chili);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
-.total{display:flex;justify-content:space-between;font-size:20px;font-weight:700;margin:12px 0;color:var(--chili)}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row .btn{flex:1}
-.muted{color:var(--mute)}
-table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
-th{background:var(--soft);font-weight:500}
-td.n,th.n{text-align:right}
-.form{display:grid;grid-template-columns:1fr 2fr auto;gap:10px;align-items:end;max-width:700px;margin-bottom:16px}
-.chart{display:flex;gap:10px;align-items:flex-end;height:190px;border-bottom:2px solid var(--ink);padding:10px 4px 0;margin:12px 0}
-.grp{flex:1;text-align:center}.bars{height:160px;display:flex;gap:3px;align-items:flex-end;justify-content:center}
-.bars i{width:40%;max-width:26px;display:block;border-radius:3px 3px 0 0}
-.b1{background:var(--jade2)}.b2{background:var(--gold)}
-.legend{font-size:13px;color:var(--mute)}.legend i{display:inline-block;width:12px;height:12px;margin:0 4px 0 12px;vertical-align:-1px}
-.scroll{overflow-x:auto}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s}
-#toast.show{opacity:1}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.stats div{border-bottom:1px solid var(--line)}.form{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){#toast{transition:none}}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cơm Nhà – Restaurant Management (demo)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --jade: #1f4d3a;
+            --jade2: #2d6a50;
+            --rice: #fbfbf6;
+            --line: #d9d4c3;
+            --ink: #23302a;
+            --mute: #6b746e;
+            --chili: #c8322a;
+            --gold: #b8923a;
+            --soft: #eef2ea
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--rice);
+            color: var(--ink);
+            font: 15px/1.5 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif
+        }
+
+        header {
+            background: var(--jade);
+            color: #fff;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700
+        }
+
+        header small {
+            opacity: .8
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 60px
+        }
+
+        .notice {
+            background: var(--soft);
+            border-left: 4px solid var(--gold);
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            gap: 0;
+            border: 1px solid var(--line);
+            margin-bottom: 18px
+        }
+
+            .stats div {
+                padding: 10px 14px;
+                border-right: 1px solid var(--line)
+            }
+
+                .stats div:last-child {
+                    border: 0
+                }
+
+            .stats span {
+                display: block;
+                color: var(--mute);
+                font-size: 12px
+            }
+
+            .stats b {
+                font-size: 18px
+            }
+
+            .stats .loss {
+                color: var(--chili)
+            }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--jade);
+            margin-bottom: 16px;
+            flex-wrap: wrap
+        }
+
+            nav button {
+                border: 0;
+                background: none;
+                padding: 10px 16px;
+                font: inherit;
+                font-weight: 500;
+                cursor: pointer;
+                color: var(--mute)
+            }
+
+                nav button.on {
+                    background: var(--jade);
+                    color: #fff
+                }
+
+        .panel {
+            display: none
+        }
+
+            .panel.on {
+                display: block
+            }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 24px
+        }
+
+        .chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px
+        }
+
+        .chip {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font: inherit;
+            cursor: pointer
+        }
+
+            .chip.on {
+                background: var(--jade2);
+                color: #fff;
+                border-color: var(--jade2)
+            }
+
+        .dish {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .pic {
+            width: 72px;
+            height: 72px;
+            border-radius: 6px;
+            background: var(--soft);
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            font-size: 32px
+        }
+
+            .pic img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+        .dish b {
+            display: block
+        }
+
+        .dish .price {
+            color: var(--chili);
+            font-weight: 700
+        }
+
+        .btn {
+            border: 0;
+            background: var(--jade);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 500;
+            cursor: pointer
+        }
+
+            .btn:hover {
+                background: var(--jade2)
+            }
+
+            .btn.alt {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid var(--line)
+            }
+
+            .btn.red {
+                background: var(--chili)
+            }
+
+            .qb:focus-visible, .rm:focus-visible, .btn:focus-visible, .chip:focus-visible, nav button:focus-visible, input:focus-visible, select:focus-visible {
+                outline: 3px solid var(--gold);
+                outline-offset: 2px
+            }
+
+        .side {
+            border: 1px solid var(--line);
+            padding: 16px;
+            align-self: start;
+            background: #fff
+        }
+
+            .side h2, .panel h2 {
+                margin: 0 0 10px;
+                font-size: 17px
+            }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--mute);
+            margin: 8px 0 3px
+        }
+
+        input, select {
+            font: inherit;
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            width: 100%;
+            background: #fff
+        }
+
+        .pay {
+            display: flex;
+            gap: 16px;
+            margin: 4px 0
+        }
+
+            .pay label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: var(--ink);
+                margin: 0
+            }
+
+            .pay input {
+                width: auto
+            }
+
+        .line {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--line)
+        }
+
+        .lt {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        .lc {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px
+        }
+
+        .q {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden
+        }
+
+        .qb {
+            border: 0;
+            background: var(--soft);
+            width: 34px;
+            height: 30px;
+            font: inherit;
+            font-size: 18px;
+            cursor: pointer
+        }
+
+            .qb:hover {
+                background: var(--line)
+            }
+
+        .q output {
+            min-width: 36px;
+            text-align: center;
+            font-weight: 700
+        }
+
+        .rm {
+            border: 0;
+            background: none;
+            color: var(--chili);
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 12px 0;
+            color: var(--chili)
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+            .row .btn {
+                flex: 1
+            }
+
+        .muted {
+            color: var(--mute)
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        th {
+            background: var(--soft);
+            font-weight: 500
+        }
+
+            td.n, th.n {
+                text-align: right
+            }
+
+        .form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            align-items: end;
+            max-width: 700px;
+            margin-bottom: 16px
+        }
+
+        .chart {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            height: 190px;
+            border-bottom: 2px solid var(--ink);
+            padding: 10px 4px 0;
+            margin: 12px 0
+        }
+
+        .grp {
+            flex: 1;
+            text-align: center
+        }
+
+        .bars {
+            height: 160px;
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            justify-content: center
+        }
+
+            .bars i {
+                width: 40%;
+                max-width: 26px;
+                display: block;
+                border-radius: 3px 3px 0 0
+            }
+
+        .b1 {
+            background: var(--jade2)
+        }
+
+        .b2 {
+            background: var(--gold)
+        }
+
+        .legend {
+            font-size: 13px;
+            color: var(--mute)
+        }
+
+            .legend i {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin: 0 4px 0 12px;
+                vertical-align: -1px
+            }
+
+        .scroll {
+            overflow-x: auto
+        }
+
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            background: var(--ink);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s
+        }
+
+            #toast.show {
+                opacity: 1
+            }
+
+        @media(max-width:800px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .stats {
+                grid-template-columns: repeat(2,1fr)
+            }
+
+                .stats div {
+                    border-bottom: 1px solid var(--line)
+                }
+
+            .form {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            #toast {
+                transition: none
+            }
+        }
+    </style>
 </head>
 <body>
-<header><div><h1>Cơm Nhà – Restaurant Management</h1><small>Orders, income, expenses and reports in one page (all prices in AUD)</small></div><small id="today"></small></header>
-<main>
-<div class="notice"><span>Demo version: data is stored only in this browser and includes sample figures for the past 6 days.</span><button class="btn alt" id="reset">Reset sample data</button></div>
-<section class="stats" id="stats"></section>
-<nav id="tabs">
-<button data-t="order" class="on">New order</button><button data-t="exp">Expenses</button><button data-t="rep">Reports</button><button data-t="his">Order history</button>
-</nav>
+    <header><div><h1>Cơm Nhà – Restaurant Management</h1><small>Orders, income, expenses and reports in one page (all prices in AUD)</small></div><small id="today"></small></header>
+    <main>
+        <div class="notice"><span>Demo version: data is stored only in this browser and includes sample figures for the past 6 days.</span><button class="btn alt" id="reset">Reset sample data</button></div>
+        <section class="stats" id="stats"></section>
+        <nav id="tabs">
+            <button data-t="order" class="on">New order</button><button data-t="exp">Expenses</button><button data-t="rep">Reports</button><button data-t="his">Order history</button>
+        </nav>
 
-<section class="panel on" id="p-order"><div class="layout">
-<div><div class="chips" id="cats"></div><div id="menu"></div></div>
-<aside class="side">
-<h2>Current order</h2>
-<label for="table">Table</label><select id="table"></select>
-<label>Payment</label><div class="pay"><label><input type="radio" name="pay" value="Cash" checked> Cash</label><label><input type="radio" name="pay" value="Card"> Card</label></div>
-<div id="lines" style="margin-top:10px"></div>
-<div class="total"><span>Total</span><span id="total"></span></div>
-<button class="btn alt" id="clear" style="width:100%">Clear order</button>
-<button class="btn red" id="checkout" style="width:100%;margin-top:8px">Save and pay</button>
-</aside></div></section>
+        <section class="panel on" id="p-order">
+            <div class="layout">
+                <div><div class="chips" id="cats"></div><div id="menu"></div></div>
+                <aside class="side">
+                    <h2>Current order</h2>
+                    <label for="table">Table</label><select id="table"></select>
+                    <label>Payment</label><div class="pay"><label><input type="radio" name="pay" value="Cash" checked> Cash</label><label><input type="radio" name="pay" value="Card"> Card</label></div>
+                    <div id="lines" style="margin-top:10px"></div>
+                    <div class="total"><span>Total</span><span id="total"></span></div>
+                    <button class="btn alt" id="clear" style="width:100%">Clear order</button>
+                    <button class="btn red" id="checkout" style="width:100%;margin-top:8px">Save and pay</button>
+                </aside>
+            </div>
+        </section>
 
-<section class="panel" id="p-exp"><h2>Add today’s expense</h2>
-<div class="form"><div><label for="ea">Amount (AUD)</label><input id="ea" type="number" min="0" step="0.01"></div><div><label for="ed">Description</label><input id="ed" type="text"></div><button class="btn red" id="addexp">Add expense</button></div>
-<div class="scroll" id="explist"></div></section>
+        <section class="panel" id="p-exp">
+            <h2>Add today’s expense</h2>
+            <div class="form"><div><label for="ea">Amount (AUD)</label><input id="ea" type="number" min="0" step="0.01"></div><div><label for="ed">Description</label><input id="ed" type="text"></div><button class="btn red" id="addexp">Add expense</button></div>
+            <div class="scroll" id="explist"></div>
+        </section>
 
-<section class="panel" id="p-rep"><h2>Daily report</h2>
-<label for="rday" style="max-width:220px">Choose a day</label><input id="rday" type="date" style="max-width:220px">
-<div class="scroll" id="daily" style="margin:12px 0 24px;max-width:420px"></div>
-<h2>7-day summary</h2>
-<label for="rweek" style="max-width:220px">Start date</label><input id="rweek" type="date" style="max-width:220px">
-<div class="chart" id="chart"></div>
-<div class="legend"><i class="b1"></i>Revenue<i class="b2"></i>Profit</div>
-<div class="scroll" id="weekly" style="margin-top:12px"></div></section>
+        <section class="panel" id="p-rep">
+            <h2>Daily report</h2>
+            <label for="rday" style="max-width:220px">Choose a day</label><input id="rday" type="date" style="max-width:220px">
+            <div class="scroll" id="daily" style="margin:12px 0 24px;max-width:420px"></div>
+            <h2>7-day summary</h2>
+            <label for="rweek" style="max-width:220px">Start date</label><input id="rweek" type="date" style="max-width:220px">
+            <div class="chart" id="chart"></div>
+            <div class="legend"><i class="b1"></i>Revenue<i class="b2"></i>Profit</div>
+            <div class="scroll" id="weekly" style="margin-top:12px"></div>
+        </section>
 
-<section class="panel" id="p-his"><h2>All saved orders</h2><div class="scroll" id="hist"></div></section>
-</main>
-<div id="toast" role="status"></div>
+        <section class="panel" id="p-his"><h2>All saved orders</h2><div class="scroll" id="hist"></div></section>
+    </main>
+    <div id="toast" role="status"></div>
 
-<script>
-// Menu: [name, price, image file in the "images" folder (optional), emoji shown if no image]
-const MENU={
-"Main courses":[["Special Beef Pho",18.5,"pho.png","🍜"],["Grilled Pork Chop Rice",19.5,"pork_rice.png","🍚"],["Hanoi Bun Cha",18,"buncha.png","🍖"],["Seafood Fried Noodles",21.5,"noodles.png","🍝"]],
-"Drinks":[["Coca Cola",4.5,"coca.png","🥤"],["Ice Tea",4,"icetea.png","🧋"],["Fresh Orange Juice",7,"orange_juice.png","🍊"],["Heineken Beer",9,"beer.png","🍺"]],
-"Starters":[["French Fries",8,"fries.png","🍟"],["Spring Rolls",10.5,"spring_rolls.png","🥟"],["Crab Soup",12.5,"crab_soup.png","🍲"]]};
-const KEY="comnha_pos_v2",$=s=>document.querySelector(s);
-const money=n=>new Intl.NumberFormat("en-AU",{style:"currency",currency:"AUD"}).format(n);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const hms=d=>d.toTimeString().slice(0,8);
-const rnd=n=>Math.floor(Math.random()*n);
-function seed(){const d={orders:[],expenses:[]},all=Object.values(MENU).flat();let id=1;
- for(let i=6;i>=1;i--){const day=ymd(new Date(Date.now()-i*864e5));
-  for(let k=0;k<2+rnd(3);k++){const items=[];for(let j=0;j<1+rnd(4);j++){const m=all[rnd(all.length)];items.push({name:m[0],price:m[1]})}
-   d.orders.push({id:id++,table:"Table "+(1+rnd(15)),date:day,time:"12:"+String(10+k*7).padStart(2,"0")+":00",amount:items.reduce((s,x)=>s+x.price,0),payment:Math.random()<.6?"Cash":"Card",items})}
-  d.expenses.push({id:i,date:day,time:"09:00:00",amount:80+rnd(120),description:"Ingredients (sample)"})}
- return d}
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.orders&&d.expenses)return d}catch(e){}return seed()}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
-let db=load(),cart=[],cat=Object.keys(MENU)[0];
-const payName=p=>p==="Cash"?"Cash":"Card";
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200)}
-function totals(day){let cash=0,card=0,exp=0;
- db.orders.forEach(o=>{if(o.date===day){if(o.payment==="Cash")cash+=o.amount;else card+=o.amount}});
- db.expenses.forEach(e=>{if(e.date===day)exp+=e.amount});
- return{cash,card,sales:cash+card,exp,profit:cash+card-exp}}
-function renderStats(){const t=totals(ymd(new Date()));
- $("#stats").innerHTML=[["Cash",t.cash],["Card",t.card],["Revenue",t.sales],["Expenses",t.exp],["Profit",t.profit]].map(([l,v])=>`<div><span>${l} today</span><b class="${l==="Profit"&&v<0?"loss":""}">${money(v)}</b></div>`).join("")}
-function renderMenu(){
- $("#cats").innerHTML=Object.keys(MENU).map(c=>`<button class="chip ${c===cat?"on":""}" data-c="${c}">${c}</button>`).join("");
- $("#menu").innerHTML=MENU[cat].map((m,i)=>`<div class="dish"><div class="pic"><span>${m[3]}</span><img src="images/${m[2]}" alt="" onerror="this.remove()"></div><div><b>${m[0]}</b><span class="price">${money(m[1])}</span></div><button class="btn" data-i="${i}">Add to order</button></div>`).join("")}
-function renderCart(){
- $("#lines").innerHTML=cart.length?cart.map((x,k)=>`<div class="line"><div class="lt"><span>${x.name}</span><b>${money(x.price*x.qty)}</b></div><div class="lc"><span class="q"><button class="qb" data-a="minus" data-k="${k}" aria-label="Decrease ${x.name}">−</button><output>${x.qty}</output><button class="qb" data-a="plus" data-k="${k}" aria-label="Increase ${x.name}">+</button></span><button class="rm" data-a="del" data-k="${k}">Remove item</button></div></div>`).join(""):'<p class="muted">No items yet. Press “Add to order” on a dish.</p>';
- $("#total").textContent=money(cart.reduce((s,x)=>s+x.price*x.qty,0))}
-const tbl=(head,rows,right=[])=>`<table><thead><tr>${head.map((h,i)=>`<th class="${right.includes(i)?"n":""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${right.includes(i)?"n":""}">${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-function renderExp(){const today=ymd(new Date()),l=db.expenses.filter(e=>e.date===today);
- $("#explist").innerHTML=l.length?tbl(["Time","Description","Amount"],l.map(e=>[e.time,esc(e.description),money(e.amount)]),[2]):'<p class="muted">No expenses recorded today.</p>'}
-function renderDaily(){const t=totals($("#rday").value||ymd(new Date()));
- $("#daily").innerHTML=tbl(["Item","Amount"],[["Cash",money(t.cash)],["Card",money(t.card)],["Revenue",money(t.sales)],["Expenses",money(t.exp)],["Profit",money(t.profit)]],[1])}
-function renderWeek(){const s=new Date(($("#rweek").value||ymd(new Date()))+"T00:00:00"),rows=[];
- for(let i=0;i<7;i++){const d=ymd(new Date(s.getFullYear(),s.getMonth(),s.getDate()+i)),t=totals(d);rows.push({d,...t})}
- const max=Math.max(1,...rows.flatMap(r=>[r.sales,r.profit]));
- $("#chart").innerHTML=rows.map(r=>`<div class="grp"><div class="bars"><i class="b1" style="height:${r.sales/max*150}px" title="${money(r.sales)}"></i><i class="b2" style="height:${Math.max(0,r.profit)/max*150}px" title="${money(r.profit)}"></i></div><small>${r.d.slice(5)}</small></div>`).join("");
- $("#weekly").innerHTML=tbl(["Date","Revenue","Expenses","Profit"],rows.map(r=>[r.d,money(r.sales),money(r.exp),money(r.profit)]),[1,2,3])}
-function renderHist(){const o=[...db.orders].reverse();
- $("#hist").innerHTML=o.length?tbl(["ID","Date","Time","Table","Payment","Total","Items"],o.map(x=>[x.id,x.date,x.time,esc(x.table),payName(x.payment),money(x.amount),esc(x.items.map(i=>(i.qty>1?i.qty+" × ":"")+i.name).join(", "))]),[5]):'<p class="muted">No orders yet.</p>'}
-function renderAll(){renderStats();renderCart();renderExp();renderDaily();renderWeek();renderHist()}
+    <script>
+        // Menu: [name, price, image file in the "images" folder (optional), emoji shown if no image]
+        const MENU = {
+            "Main courses": [["Special Beef Pho", 18.5, "pho.png", "🍜"], ["Grilled Pork Chop Rice", 19.5, "pork_rice.png", "🍚"], ["Hanoi Bun Cha", 18, "buncha.png", "🍖"], ["Seafood Fried Noodles", 21.5, "noodles.png", "🍝"]],
+            "Drinks": [["Coca Cola", 4.5, "coca.png", "🥤"], ["Ice Tea", 4, "icetea.png", "🧋"], ["Fresh Orange Juice", 7, "orange_juice.png", "🍊"], ["Heineken Beer", 9, "beer.png", "🍺"]],
+            "Starters": [["French Fries", 8, "fries.png", "🍟"], ["Spring Rolls", 10.5, "spring_rolls.png", "🥟"], ["Crab Soup", 12.5, "crab_soup.png", "🍲"]]
+        };
+        const KEY = "comnha_pos_v2", $ = s => document.querySelector(s);
+        const money = n => new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(n);
+        const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        const ymd = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+        const hms = d => d.toTimeString().slice(0, 8);
+        const rnd = n => Math.floor(Math.random() * n);
+        function seed() {
+            const d = { orders: [], expenses: [] }, all = Object.values(MENU).flat(); let id = 1;
+            for (let i = 6; i >= 1; i--) {
+                const day = ymd(new Date(Date.now() - i * 864e5));
+                for (let k = 0; k < 2 + rnd(3); k++) {
+                    const items = []; for (let j = 0; j < 1 + rnd(4); j++) { const m = all[rnd(all.length)]; items.push({ name: m[0], price: m[1] }) }
+                    d.orders.push({ id: id++, table: "Table " + (1 + rnd(15)), date: day, time: "12:" + String(10 + k * 7).padStart(2, "0") + ":00", amount: items.reduce((s, x) => s + x.price, 0), payment: Math.random() < .6 ? "Cash" : "Card", items })
+                }
+                d.expenses.push({ id: i, date: day, time: "09:00:00", amount: 80 + rnd(120), description: "Ingredients (sample)" })
+            }
+            return d
+        }
+        function load() { try { const d = JSON.parse(localStorage.getItem(KEY)); if (d && d.orders && d.expenses) return d } catch (e) { } return seed() }
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(db)) } catch (e) { } }
+        let db = load(), cart = [], cat = Object.keys(MENU)[0];
+        const payName = p => p === "Cash" ? "Cash" : "Card";
+        function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2200) }
+        function totals(day) {
+            let cash = 0, card = 0, exp = 0;
+            db.orders.forEach(o => { if (o.date === day) { if (o.payment === "Cash") cash += o.amount; else card += o.amount } });
+            db.expenses.forEach(e => { if (e.date === day) exp += e.amount });
+            return { cash, card, sales: cash + card, exp, profit: cash + card - exp }
+        }
+        function renderStats() {
+            const t = totals(ymd(new Date()));
+            $("#stats").innerHTML = [["Cash", t.cash], ["Card", t.card], ["Revenue", t.sales], ["Expenses", t.exp], ["Profit", t.profit]].map(([l, v]) => `<div><span>${l} today</span><b class="${l === "Profit" && v < 0 ? "loss" : ""}">${money(v)}</b></div>`).join("")
+        }
+        function renderMenu() {
+            $("#cats").innerHTML = Object.keys(MENU).map(c => `<button class="chip ${c === cat ? "on" : ""}" data-c="${c}">${c}</button>`).join("");
+            $("#menu").innerHTML = MENU[cat].map((m, i) => `<div class="dish"><div class="pic"><span>${m[3]}</span><img src="images/${m[2]}" alt="" onerror="this.remove()"></div><div><b>${m[0]}</b><span class="price">${money(m[1])}</span></div><button class="btn" data-i="${i}">Add to order</button></div>`).join("")
+        }
+        function renderCart() {
+            $("#lines").innerHTML = cart.length ? cart.map((x, k) => `<div class="line"><div class="lt"><span>${x.name}</span><b>${money(x.price * x.qty)}</b></div><div class="lc"><span class="q"><button class="qb" data-a="minus" data-k="${k}" aria-label="Decrease ${x.name}">−</button><output>${x.qty}</output><button class="qb" data-a="plus" data-k="${k}" aria-label="Increase ${x.name}">+</button></span><button class="rm" data-a="del" data-k="${k}">Remove item</button></div></div>`).join("") : '<p class="muted">No items yet. Press “Add to order” on a dish.</p>';
+            $("#total").textContent = money(cart.reduce((s, x) => s + x.price * x.qty, 0))
+        }
+        const tbl = (head, rows, right = []) => `<table><thead><tr>${head.map((h, i) => `<th class="${right.includes(i) ? "n" : ""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td class="${right.includes(i) ? "n" : ""}">${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+        function renderExp() {
+            const today = ymd(new Date()), l = db.expenses.filter(e => e.date === today);
+            $("#explist").innerHTML = l.length ? tbl(["Time", "Description", "Amount"], l.map(e => [e.time, esc(e.description), money(e.amount)]), [2]) : '<p class="muted">No expenses recorded today.</p>'
+        }
+        function renderDaily() {
+            const t = totals($("#rday").value || ymd(new Date()));
+            $("#daily").innerHTML = tbl(["Item", "Amount"], [["Cash", money(t.cash)], ["Card", money(t.card)], ["Revenue", money(t.sales)], ["Expenses", money(t.exp)], ["Profit", money(t.profit)]], [1])
+        }
+        function renderWeek() {
+            const s = new Date(($("#rweek").value || ymd(new Date())) + "T00:00:00"), rows = [];
+            for (let i = 0; i < 7; i++) { const d = ymd(new Date(s.getFullYear(), s.getMonth(), s.getDate() + i)), t = totals(d); rows.push({ d, ...t }) }
+            const max = Math.max(1, ...rows.flatMap(r => [r.sales, r.profit]));
+            $("#chart").innerHTML = rows.map(r => `<div class="grp"><div class="bars"><i class="b1" style="height:${r.sales / max * 150}px" title="${money(r.sales)}"></i><i class="b2" style="height:${Math.max(0, r.profit) / max * 150}px" title="${money(r.profit)}"></i></div><small>${r.d.slice(5)}</small></div>`).join("");
+            $("#weekly").innerHTML = tbl(["Date", "Revenue", "Expenses", "Profit"], rows.map(r => [r.d, money(r.sales), money(r.exp), money(r.profit)]), [1, 2, 3])
+        }
+        function renderHist() {
+            const o = [...db.orders].reverse();
+            $("#hist").innerHTML = o.length ? tbl(["ID", "Date", "Time", "Table", "Payment", "Total", "Items"], o.map(x => [x.id, x.date, x.time, esc(x.table), payName(x.payment), money(x.amount), esc(x.items.map(i => (i.qty > 1 ? i.qty + " × " : "") + i.name).join(", "))]), [5]) : '<p class="muted">No orders yet.</p>'
+        }
+        function renderAll() { renderStats(); renderCart(); renderExp(); renderDaily(); renderWeek(); renderHist() }
 
-$("#today").textContent=new Date().toLocaleDateString("en-AU");
-$("#table").innerHTML=Array.from({length:15},(_,i)=>`<option>Table ${i+1}</option>`).join("");
-$("#rday").value=ymd(new Date());$("#rweek").value=ymd(new Date(Date.now()-6*864e5));
-$("#tabs").onclick=e=>{const t=e.target.dataset.t;if(!t)return;document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b===e.target));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+t))};
-$("#cats").onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;renderMenu()}};
-$("#menu").onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;const m=MENU[cat][i],f=cart.find(x=>x.name===m[0]);if(f)f.qty++;else cart.push({name:m[0],price:m[1],qty:1});renderCart()};
-$("#lines").onclick=e=>{const b=e.target.closest("button[data-a]");if(!b)return;const k=+b.dataset.k,a=b.dataset.a;
- if(a==="plus")cart[k].qty++;else if(a==="minus"&&cart[k].qty>1)cart[k].qty--;else cart.splice(k,1);renderCart()};
-$("#clear").onclick=()=>{cart=[];renderCart()};
-$("#checkout").onclick=()=>{
- if(!cart.length)return toast("No items in the order yet.");
- const n=new Date(),amount=cart.reduce((s,x)=>s+x.price*x.qty,0);
- db.orders.push({id:Math.max(0,...db.orders.map(o=>o.id))+1,table:$("#table").value,date:ymd(n),time:hms(n),amount,payment:document.querySelector("input[name=pay]:checked").value,items:cart.map(x=>({...x}))});
- save();cart=[];renderAll();toast("Order saved: "+money(amount))};
-$("#addexp").onclick=()=>{
- const a=parseFloat($("#ea").value);if(!(a>0))return toast("Enter an amount greater than 0.");
- const n=new Date();db.expenses.push({id:Math.max(0,...db.expenses.map(e=>e.id))+1,date:ymd(n),time:hms(n),amount:a,description:$("#ed").value.trim()||"General expense"});
- save();$("#ea").value="";$("#ed").value="";renderAll();toast("Expense added.")};
-$("#rday").onchange=renderDaily;$("#rweek").onchange=renderWeek;
-$("#reset").onclick=()=>{if(confirm("Delete the current data and recreate the sample data?")){try{localStorage.removeItem(KEY)}catch(e){}db=seed();save();cart=[];renderAll();toast("Sample data has been reset.")}};
-renderMenu();renderAll();
-</script>
+        $("#today").textContent = new Date().toLocaleDateString("en-AU");
+        $("#table").innerHTML = Array.from({ length: 15 }, (_, i) => `<option>Table ${i + 1}</option>`).join("");
+        $("#rday").value = ymd(new Date()); $("#rweek").value = ymd(new Date(Date.now() - 6 * 864e5));
+        $("#tabs").onclick = e => { const t = e.target.dataset.t; if (!t) return; document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b === e.target)); document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + t)) };
+        $("#cats").onclick = e => { if (e.target.dataset.c) { cat = e.target.dataset.c; renderMenu() } };
+        $("#menu").onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; const m = MENU[cat][i], f = cart.find(x => x.name === m[0]); if (f) f.qty++; else cart.push({ name: m[0], price: m[1], qty: 1 }); renderCart() };
+        $("#lines").onclick = e => {
+            const b = e.target.closest("button[data-a]"); if (!b) return; const k = +b.dataset.k, a = b.dataset.a;
+            if (a === "plus") cart[k].qty++; else if (a === "minus" && cart[k].qty > 1) cart[k].qty--; else cart.splice(k, 1); renderCart()
+        };
+        $("#clear").onclick = () => { cart = []; renderCart() };
+        $("#checkout").onclick = () => {
+            if (!cart.length) return toast("No items in the order yet.");
+            const n = new Date(), amount = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            db.orders.push({ id: Math.max(0, ...db.orders.map(o => o.id)) + 1, table: $("#table").value, date: ymd(n), time: hms(n), amount, payment: document.querySelector("input[name=pay]:checked").value, items: cart.map(x => ({ ...x })) });
+            save(); cart = []; renderAll(); toast("Order saved: " + money(amount))
+        };
+        $("#addexp").onclick = () => {
+            const a = parseFloat($("#ea").value); if (!(a > 0)) return toast("Enter an amount greater than 0.");
+            const n = new Date(); db.expenses.push({ id: Math.max(0, ...db.expenses.map(e => e.id)) + 1, date: ymd(n), time: hms(n), amount: a, description: $("#ed").value.trim() || "General expense" });
+            save(); $("#ea").value = ""; $("#ed").value = ""; renderAll(); toast("Expense added.")
+        };
+        $("#rday").onchange = renderDaily; $("#rweek").onchange = renderWeek;
+        $("#reset").onclick = () => { if (confirm("Delete the current data and recreate the sample data?")) { try { localStorage.removeItem(KEY) } catch (e) { } db = seed(); save(); cart = []; renderAll(); toast("Sample data has been reset.") } };
+        renderMenu(); renderAll();
+    </script>
 </body>
 </html>
