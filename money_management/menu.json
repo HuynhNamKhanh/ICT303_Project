@@ -1,0 +1,101 @@
+[
+ {
+  "category": "Main courses",
+  "name": "Special Beef Pho",
+  "price": 18.0,
+  "image": "pho.png",
+  "emoji": "🍜",
+  "available": true,
+  "id": 1
+ },
+ {
+  "category": "Main courses",
+  "name": "Grilled Pork Chop Rice",
+  "price": 19.5,
+  "image": "pork_rice.png",
+  "emoji": "🍚",
+  "available": true,
+  "id": 2
+ },
+ {
+  "category": "Main courses",
+  "name": "Hanoi Bun Cha",
+  "price": 18.0,
+  "image": "buncha.png",
+  "emoji": "🍖",
+  "available": true,
+  "id": 3
+ },
+ {
+  "category": "Main courses",
+  "name": "Seafood Fried Noodles",
+  "price": 21.5,
+  "image": "noodles.png",
+  "emoji": "🍝",
+  "available": true,
+  "id": 4
+ },
+ {
+  "category": "Drinks",
+  "name": "Coca Cola",
+  "price": 4.5,
+  "image": "coca.png",
+  "emoji": "🥤",
+  "available": true,
+  "id": 5
+ },
+ {
+  "category": "Drinks",
+  "name": "Ice Tea",
+  "price": 4.0,
+  "image": "icetea.png",
+  "emoji": "🧋",
+  "available": true,
+  "id": 6
+ },
+ {
+  "category": "Drinks",
+  "name": "Fresh Orange Juice",
+  "price": 7.0,
+  "image": "orange_juice.png",
+  "emoji": "🍊",
+  "available": true,
+  "id": 7
+ },
+ {
+  "category": "Drinks",
+  "name": "Heineken Beer",
+  "price": 9.0,
+  "image": "beer.png",
+  "emoji": "🍺",
+  "available": true,
+  "id": 8
+ },
+ {
+  "category": "Starters",
+  "name": "French Fries",
+  "price": 8.0,
+  "image": "fries.png",
+  "emoji": "🍟",
+  "available": true,
+  "id": 9
+ },
+ {
+  "category": "Starters",
+  "name": "Spring Rolls",
+  "price": 10.5,
+  "image": "spring_rolls.png",
+  "emoji": "🥟",
+  "available": true,
+  "id": 10
+ },
+ {
+  "category": "Starters",
+  "name": "Crab Soup",
+  "price": 12.5,
+  "image": "crab_soup.png",
+  "emoji": "🍲",
+  "available": true,
+  "id": 11
+ }
+]

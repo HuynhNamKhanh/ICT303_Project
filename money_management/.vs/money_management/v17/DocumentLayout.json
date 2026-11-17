@@ -7,8 +7,20 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:run.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\order.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:order.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\staff.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:staff.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Com_nha_application_final.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,8 +30,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "staff.html",
+              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\staff.html",
+              "RelativeDocumentMoniker": "staff.html",
+              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\staff.html",
+              "RelativeToolTip": "staff.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-11-17T17:21:45.303Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "order.html",
+              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\order.html",
+              "RelativeDocumentMoniker": "order.html",
+              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\order.html",
+              "RelativeToolTip": "order.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-11-17T17:21:42.044Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "config.json",
+              "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\config.json",
+              "RelativeDocumentMoniker": "config.json",
+              "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\config.json",
+              "RelativeToolTip": "config.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-11-17T16:43:05.983Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,22 +79,23 @@
               "RelativeDocumentMoniker": "run.py",
               "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\run.py",
               "RelativeToolTip": "run.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAADkCAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
               "WhenOpened": "2026-11-04T00:46:59.871Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Com_nha_application_final.html",
               "DocumentMoniker": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html",
               "RelativeDocumentMoniker": "Com_nha_application_final.html",
               "ToolTip": "C:\\Users\\joker\\Downloads\\VsCode\\ICT303_Project\\ICT303_Project\\money_management\\Com_nha_application_final.html",
               "RelativeToolTip": "Com_nha_application_final.html",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAA8AAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-11-04T00:44:23.895Z"
+              "WhenOpened": "2026-11-04T00:44:23.895Z",
+              "EditorCaption": ""
             }
           ]
         }

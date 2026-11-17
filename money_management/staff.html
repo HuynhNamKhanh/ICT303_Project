@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cơm Nhà – Staff</title>
+    <style>
+        :root {
+            --jade: #1f4d3a;
+            --jade2: #2d6a50;
+            --rice: #fbfbf6;
+            --line: #d9d4c3;
+            --ink: #23302a;
+            --mute: #5f6862;
+            --chili: #c8322a;
+            --gold: #b8923a;
+            --soft: #eef2ea
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--rice);
+            color: var(--ink);
+            font: 15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif
+        }
+
+        header {
+            background: var(--jade);
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px
+        }
+
+        header small {
+            opacity: .85
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 60px
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            border: 1px solid var(--line);
+            margin-bottom: 18px;
+            background: #fff
+        }
+
+            .stats div {
+                padding: 10px 14px;
+                border-right: 1px solid var(--line)
+            }
+
+                .stats div:last-child {
+                    border: 0
+                }
+
+            .stats span {
+                display: block;
+                color: var(--mute);
+                font-size: 12px
+            }
+
+            .stats b {
+                font-size: 18px
+            }
+
+            .stats .loss {
+                color: var(--chili)
+            }
+
+        nav {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--jade);
+            margin-bottom: 16px;
+            flex-wrap: wrap
+        }
+
+            nav button {
+                border: 0;
+                background: none;
+                padding: 10px 16px;
+                font: inherit;
+                font-weight: 500;
+                cursor: pointer;
+                color: var(--mute)
+            }
+
+                nav button.on {
+                    background: var(--jade);
+                    color: #fff
+                }
+
+        .badge {
+            display: inline-block;
+            min-width: 20px;
+            padding: 0 6px;
+            margin-left: 6px;
+            border-radius: 10px;
+            background: var(--chili);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center
+        }
+
+        .panel {
+            display: none
+        }
+
+            .panel.on {
+                display: block
+            }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 24px
+        }
+
+        .chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px
+        }
+
+        .chip {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font: inherit;
+            cursor: pointer
+        }
+
+            .chip.on {
+                background: var(--jade2);
+                color: #fff;
+                border-color: var(--jade2)
+            }
+
+        .dish {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .pic {
+            width: 72px;
+            height: 72px;
+            border-radius: 6px;
+            background: var(--soft);
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            font-size: 32px
+        }
+
+            .pic img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+        .dish b {
+            display: block
+        }
+
+        .price {
+            color: var(--chili);
+            font-weight: 700
+        }
+
+        .btn {
+            border: 0;
+            background: var(--jade);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 500;
+            cursor: pointer
+        }
+
+            .btn:hover {
+                background: var(--jade2)
+            }
+
+            .btn.alt {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid var(--line)
+            }
+
+            .btn.red {
+                background: var(--chili)
+            }
+
+            .btn.gold {
+                background: var(--gold)
+            }
+
+            .btn[disabled] {
+                opacity: .5;
+                cursor: default
+            }
+
+        button:focus-visible, input:focus-visible, select:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 2px
+        }
+
+        .side {
+            border: 1px solid var(--line);
+            padding: 16px;
+            align-self: start;
+            background: #fff
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 17px
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--mute);
+            margin: 8px 0 3px
+        }
+
+        input, select {
+            font: inherit;
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            width: 100%;
+            background: #fff
+        }
+
+        .pay {
+            display: flex;
+            gap: 16px;
+            margin: 4px 0
+        }
+
+            .pay label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: var(--ink);
+                margin: 0
+            }
+
+            .pay input {
+                width: auto
+            }
+
+        .line {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--line)
+        }
+
+        .lt {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        .lc {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px
+        }
+
+        .q {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden
+        }
+
+        .qb {
+            border: 0;
+            background: var(--soft);
+            width: 34px;
+            height: 30px;
+            font: inherit;
+            font-size: 18px;
+            cursor: pointer
+        }
+
+        .q output {
+            min-width: 36px;
+            text-align: center;
+            font-weight: 700
+        }
+
+        .rm {
+            border: 0;
+            background: none;
+            color: var(--chili);
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 12px 0;
+            color: var(--chili)
+        }
+
+        .muted {
+            color: var(--mute)
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        th {
+            background: var(--soft);
+            font-weight: 500
+        }
+
+            td.n, th.n {
+                text-align: right
+            }
+
+        .form {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 10px;
+            align-items: end;
+            max-width: 700px;
+            margin-bottom: 16px
+        }
+
+        .chart {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            height: 190px;
+            border-bottom: 2px solid var(--ink);
+            padding: 10px 4px 0;
+            margin: 12px 0
+        }
+
+        .grp {
+            flex: 1;
+            text-align: center
+        }
+
+        .bars {
+            height: 160px;
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            justify-content: center
+        }
+
+            .bars i {
+                width: 40%;
+                max-width: 26px;
+                display: block;
+                border-radius: 3px 3px 0 0
+            }
+
+        .b1 {
+            background: var(--jade2)
+        }
+
+        .b2 {
+            background: var(--gold)
+        }
+
+        .legend {
+            font-size: 13px;
+            color: var(--mute)
+        }
+
+            .legend i {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin: 0 4px 0 12px;
+                vertical-align: -1px
+            }
+
+        .scroll {
+            overflow-x: auto
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(290px,1fr));
+            gap: 14px
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 14px;
+            border-radius: 8px
+        }
+
+            .card.new {
+                border-color: var(--chili);
+                border-width: 2px
+            }
+
+            .card h3 {
+                margin: 0;
+                display: flex;
+                justify-content: space-between;
+                gap: 8px;
+                font-size: 17px
+            }
+
+        .tag {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--soft);
+            color: var(--jade)
+        }
+
+        .card.new .tag {
+            background: var(--chili);
+            color: #fff
+        }
+
+        .card ul {
+            margin: 8px 0;
+            padding-left: 18px
+        }
+
+        .acts {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .qrgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+            gap: 14px;
+            margin-top: 14px
+        }
+
+        .qrcard {
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 12px;
+            text-align: center;
+            break-inside: avoid
+        }
+
+            .qrcard b {
+                font-size: 20px;
+                display: block
+            }
+
+            .qrcard canvas {
+                width: 100%;
+                max-width: 170px;
+                height: auto
+            }
+
+            .qrcard small {
+                display: block;
+                word-break: break-all;
+                color: var(--mute);
+                font-size: 11px
+            }
+
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            background: var(--ink);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s;
+            z-index: 30
+        }
+
+            #toast.show {
+                opacity: 1
+            }
+
+        #login {
+            position: fixed;
+            inset: 0;
+            background: var(--jade);
+            display: grid;
+            place-items: center;
+            z-index: 20;
+            padding: 16px
+        }
+
+            #login[hidden] {
+                display: none
+            }
+
+            #login form {
+                background: #fff;
+                padding: 26px;
+                border-radius: 10px;
+                max-width: 340px;
+                width: 100%
+            }
+
+            #login input {
+                font-size: 22px;
+                letter-spacing: 6px;
+                text-align: center
+            }
+
+        .err {
+            color: var(--chili);
+            min-height: 1.4em;
+            font-weight: 600
+        }
+
+        .mform {
+            display: grid;
+            grid-template-columns: 2fr 1.3fr .8fr .7fr 1.4fr;
+            gap: 10px;
+            align-items: end;
+            max-width: 960px;
+            margin-bottom: 8px
+        }
+
+            .mform .chk {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--ink);
+                margin: 0
+            }
+
+                .mform .chk input {
+                    width: auto
+                }
+
+        .hidden-row td {
+            color: var(--mute)
+        }
+
+        .mtools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 720px;
+            margin: 6px 0 0
+        }
+
+            .mtools > div {
+                min-width: 180px
+            }
+
+        .mbtn {
+            margin-right: 6px
+        }
+
+        @media(max-width:800px) {
+            .mform {
+                grid-template-columns: 1fr
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .stats {
+                grid-template-columns: repeat(2,1fr)
+            }
+
+                .stats div {
+                    border-bottom: 1px solid var(--line)
+                }
+
+            .form {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media print {
+            header, nav, .stats, .noprint, #toast {
+                display: none !important
+            }
+
+            .panel {
+                display: none !important
+            }
+
+            #p-qr {
+                display: block !important
+            }
+
+            .qrgrid {
+                grid-template-columns: repeat(3,1fr)
+            }
+
+            body {
+                background: #fff
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            #toast {
+                transition: none
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="login" hidden><form id="lf"><h2>Cơm Nhà – Staff</h2><label for="pin">Enter the staff PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12"><p class="err" id="lerr" role="alert"></p><button class="btn" style="width:100%" type="submit">Sign in</button></form></div>
+
+    <header><div><h1>Cơm Nhà – Staff</h1><small>Orders, income, expenses and reports (all prices in AUD)</small></div><div><small id="today"></small> <button class="btn alt" id="logout" style="margin-left:10px">Sign out</button></div></header>
+    <main>
+        <section class="stats" id="stats"></section>
+        <nav id="tabs">
+            <button data-t="in" class="on">Incoming orders<span class="badge" id="badge" hidden>0</span></button><button data-t="order">New order</button><button data-t="exp">Expenses</button><button data-t="rep">Reports</button><button data-t="his">Order history</button><button data-t="menu">Menu</button><button data-t="qr">QR codes</button>
+        </nav>
+
+        <section class="panel on" id="p-in"><h2>Open orders</h2><p class="muted" id="inhint">Orders sent from customers' phones appear here within a few seconds.</p><div class="cards" id="cards"></div></section>
+
+        <section class="panel" id="p-order">
+            <div class="layout">
+                <div><div class="chips" id="cats"></div><div id="menu"></div></div>
+                <aside class="side">
+                    <h2>Counter order (paid now)</h2>
+                    <label for="table">Table</label><select id="table"></select>
+                    <label>Payment</label><div class="pay"><label><input type="radio" name="pay" value="Cash" checked> Cash</label><label><input type="radio" name="pay" value="Card"> Card</label></div>
+                    <div id="lines" style="margin-top:10px"></div>
+                    <div class="total"><span>Total</span><span id="total"></span></div>
+                    <button class="btn alt" id="clear" style="width:100%">Clear order</button>
+                    <button class="btn red" id="checkout" style="width:100%;margin-top:8px">Save and pay</button>
+                </aside>
+            </div>
+        </section>
+
+        <section class="panel" id="p-exp">
+            <h2>Add today’s expense</h2>
+            <div class="form"><div><label for="ea">Amount (AUD)</label><input id="ea" type="number" min="0" step="0.01"></div><div><label for="ed">Description</label><input id="ed" type="text" maxlength="100"></div><button class="btn red" id="addexp">Add expense</button></div>
+            <div class="scroll" id="explist"></div>
+        </section>
+
+        <section class="panel" id="p-rep">
+            <h2>Daily report</h2>
+            <label for="rday" style="max-width:220px">Choose a day</label><input id="rday" type="date" style="max-width:220px">
+            <div class="scroll" id="daily" style="margin:12px 0 24px;max-width:420px"></div>
+            <h2>7-day summary</h2>
+            <label for="rweek" style="max-width:220px">Start date</label><input id="rweek" type="date" style="max-width:220px">
+            <div class="chart" id="chart"></div>
+            <div class="legend"><i class="b1"></i>Revenue<i class="b2"></i>Profit</div>
+            <div class="scroll" id="weekly" style="margin-top:12px"></div>
+            <p class="muted">Only paid orders count as revenue.</p>
+        </section>
+
+        <section class="panel" id="p-his"><h2>All orders</h2><div class="scroll" id="hist"></div></section>
+
+        <section class="panel" id="p-menu">
+            <h2 id="mtitle">Add a dish</h2>
+            <form class="mform" id="mform" autocomplete="off">
+                <div><label for="mname">Dish name</label><input id="mname" type="text" maxlength="60" required></div>
+                <div><label for="mcat">Category</label><input id="mcat" type="text" maxlength="30" list="mcats" required><datalist id="mcats"></datalist></div>
+                <div><label for="mprice">Price (AUD)</label><input id="mprice" type="number" min="0.01" max="1000" step="0.01" required></div>
+                <div><label for="memoji">Emoji</label><input id="memoji" type="text" maxlength="8" placeholder="🍜"></div>
+                <div><label for="mimg">Picture file (optional)</label><input id="mimg" type="text" maxlength="60" placeholder="pho.png"></div>
+                <label class="chk"><input id="mavail" type="checkbox" checked> Customers can order this dish</label>
+                <div style="display:flex;gap:8px"><button class="btn" type="submit" id="msave">Add dish</button><button class="btn alt" type="button" id="mcancel" hidden>Cancel</button></div>
+            </form>
+            <p class="muted" style="margin:0 0 6px">To show a picture, put the file in the <b>images</b> folder next to run.py and type its file name. Without a picture the emoji is shown.</p>
+            <p class="err" id="merr" role="alert"></p>
+            <h2 style="margin-top:18px">Dishes</h2>
+            <div class="mtools"><div style="flex:2"><label for="msearch">Search dishes</label><input id="msearch" type="search" placeholder="Type part of a dish name" autocomplete="off"></div><div style="flex:1"><label for="mfcat">Category</label><select id="mfcat"></select></div></div>
+            <p class="muted" id="msum" style="margin:8px 0" aria-live="polite"></p>
+            <div class="scroll" id="mlist"></div>
+            <p class="muted">Changes apply straight away on customers' phones and on the counter. A hidden dish stays in this list but cannot be ordered. Past orders keep the name and price they had.</p>
+        </section>
+
+        <section class="panel" id="p-qr">
+            <h2>QR codes for the tables</h2>
+            <p class="muted noprint">Print this page and put one code on each table. Customers must be connected to the shop Wi-Fi. If a phone cannot open the page, check that the address below is the one shown when you started the server.</p>
+            <div class="noprint" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;max-width:700px"><div style="flex:1;min-width:240px"><label for="base">Server address</label><input id="base" type="text"></div><button class="btn" id="mkqr">Update codes</button><button class="btn alt" id="printqr">Print</button></div>
+            <p class="err noprint" id="qrerr"></p>
+            <div class="qrgrid" id="qrgrid"></div>
+        </section>
+    </main>
+    <div id="toast" role="status"></div>
+
+    <script>
+        // ---------- QR code encoder (byte mode, error correction M, versions 1-6; enough for a short web address)
+        const QR = (() => {
+            const EC = [null, [10, [16]], [16, [28]], [26, [44]], [18, [32, 32]], [24, [43, 43]], [16, [27, 27, 27, 27]]];
+            const ALIGN = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34]];
+            const EXP = new Array(512), LOG = new Array(256); let x = 1;
+            for (let i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 256) x ^= 0x11d }
+            for (let i = 255; i < 512; i++)EXP[i] = EXP[i - 255];
+            const mul = (a, b) => a && b ? EXP[LOG[a] + LOG[b]] : 0;
+            function gen(n) { let g = [1]; for (let i = 0; i < n; i++) { const h = new Array(g.length + 1).fill(0); for (let j = 0; j < g.length; j++) { h[j] ^= g[j]; h[j + 1] ^= mul(g[j], EXP[i]) } g = h } return g }
+            function rem(data, n) { const g = gen(n), r = new Array(n).fill(0); for (const b of data) { const f = b ^ r[0]; r.shift(); r.push(0); for (let i = 0; i < n; i++)r[i] ^= mul(g[i + 1], f) } return r }
+            const cond = [(x, y) => (x + y) % 2 == 0, (x, y) => y % 2 == 0, (x, y) => x % 3 == 0, (x, y) => (x + y) % 3 == 0, (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 == 0, (x, y) => x * y % 2 + x * y % 3 == 0, (x, y) => (x * y % 2 + x * y % 3) % 2 == 0, (x, y) => ((x + y) % 2 + x * y % 3) % 2 == 0];
+            function make(text) {
+                const bytes = [...new TextEncoder().encode(text)]; let ver = 0, cap = 0;
+                for (let v = 1; v <= 6; v++) { const c = EC[v][1].reduce((a, b) => a + b, 0); if (bytes.length + 2 <= c) { ver = v; cap = c; break } }
+                if (!ver) return null;
+                const bits = [], put = (v, l) => { for (let i = l - 1; i >= 0; i--)bits.push((v >>> i) & 1) };
+                put(4, 4); put(bytes.length, 8); bytes.forEach(b => put(b, 8)); put(0, Math.min(4, cap * 8 - bits.length));
+                while (bits.length % 8) bits.push(0);
+                const data = []; for (let i = 0; i < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++)b = b << 1 | bits[i + j]; data.push(b) }
+                for (let p = 0xEC; data.length < cap; p ^= 0xEC ^ 0x11)data.push(p);
+                const [ecn, sizes] = EC[ver]; let pos = 0;
+                const blocks = sizes.map(n => { const d = data.slice(pos, pos + n); pos += n; return { d, e: rem(d, ecn) } });
+                const cw = []; for (let i = 0; i < Math.max(...sizes); i++)blocks.forEach(b => { if (i < b.d.length) cw.push(b.d[i]) });
+                for (let i = 0; i < ecn; i++)blocks.forEach(b => cw.push(b.e[i]));
+                const n = 17 + 4 * ver, grid = () => Array.from({ length: n }, () => new Array(n).fill(false));
+                const m = grid(), fn = grid(), set = (x, y, v) => { m[y][x] = v; fn[y][x] = true };
+                for (let i = 0; i < n; i++) { set(6, i, i % 2 == 0); set(i, 6, i % 2 == 0) }
+                const finder = (cx, cy) => { for (let dy = -4; dy <= 4; dy++)for (let dx = -4; dx <= 4; dx++) { const x = cx + dx, y = cy + dy; if (x < 0 || y < 0 || x >= n || y >= n) continue; const d = Math.max(Math.abs(dx), Math.abs(dy)); set(x, y, d != 2 && d != 4) } };
+                finder(3, 3); finder(n - 4, 3); finder(3, n - 4);
+                const al = ALIGN[ver];
+                for (let i = 0; i < al.length; i++)for (let j = 0; j < al.length; j++) { if ((i == 0 && j == 0) || (i == 0 && j == al.length - 1) || (i == al.length - 1 && j == 0)) continue; for (let dy = -2; dy <= 2; dy++)for (let dx = -2; dx <= 2; dx++)set(al[i] + dx, al[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) != 1) }
+                const fmt = (g, mask) => {
+                    let r = mask; for (let i = 0; i < 10; i++)r = (r << 1) ^ ((r >>> 9) * 0x537); const bt = ((mask << 10) | r) ^ 0x5412, b = i => ((bt >>> i) & 1) == 1, s = (x, y, v) => { g[y][x] = v };
+                    for (let i = 0; i <= 5; i++)s(8, i, b(i)); s(8, 7, b(6)); s(8, 8, b(7)); s(7, 8, b(8)); for (let i = 9; i < 15; i++)s(14 - i, 8, b(i));
+                    for (let i = 0; i < 8; i++)s(n - 1 - i, 8, b(i)); for (let i = 8; i < 15; i++)s(8, n - 15 + i, b(i)); s(8, n - 8, true)
+                };
+                fmt(m, 0);  // reserve the format area
+                for (let i = 0; i <= 5; i++)fn[i][8] = true; fn[7][8] = fn[8][8] = fn[8][7] = true; for (let i = 9; i < 15; i++)fn[8][14 - i] = true;
+                for (let i = 0; i < 8; i++)fn[8][n - 1 - i] = true; for (let i = 8; i < 15; i++)fn[n - 15 + i][8] = true; fn[n - 8][8] = true;
+                const db = []; cw.forEach(b => { for (let i = 7; i >= 0; i--)db.push((b >>> i) & 1) });
+                let bi = 0;
+                for (let right = n - 1; right >= 1; right -= 2) {
+                    if (right == 6) right = 5;
+                    for (let v = 0; v < n; v++)for (let j = 0; j < 2; j++) { const x = right - j, up = ((right + 1) & 2) == 0, y = up ? n - 1 - v : v; if (!fn[y][x]) { m[y][x] = bi < db.length && db[bi] == 1; bi++ } }
+                }
+                const pen = g => {
+                    let p = 0;
+                    for (let a = 0; a < 2; a++)for (let i = 0; i < n; i++) { let run = 1; for (let j = 1; j < n; j++) { const c = a ? g[j][i] : g[i][j], q = a ? g[j - 1][i] : g[i][j - 1]; if (c == q) { run++; if (run == 5) p += 3; else if (run > 5) p++ } else run = 1 } }
+                    for (let y = 0; y < n - 1; y++)for (let x = 0; x < n - 1; x++) { const c = g[y][x]; if (c == g[y][x + 1] && c == g[y + 1][x] && c == g[y + 1][x + 1]) p += 3 }
+                    let dark = 0; g.forEach(r => r.forEach(v => { if (v) dark++ })); return p + Math.floor(Math.abs(dark * 20 - n * n * 10) / (n * n)) * 10
+                };
+                let best = null, bp = 1e9;
+                for (let k = 0; k < 8; k++) { const g = m.map(r => r.slice()); for (let y = 0; y < n; y++)for (let x = 0; x < n; x++)if (!fn[y][x] && cond[k](x, y)) g[y][x] = !g[y][x]; fmt(g, k); const p = pen(g); if (p < bp) { bp = p; best = g } }
+                return best;
+            }
+            return { make };
+        })();
+        function drawQR(canvas, text, scale) {
+            const g = QR.make(text); if (!g) return false; const n = g.length, q = 4;
+            canvas.width = canvas.height = (n + 2 * q) * scale; const c = canvas.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, canvas.width, canvas.height); c.fillStyle = "#000";
+            for (let y = 0; y < n; y++)for (let x = 0; x < n; x++)if (g[y][x]) c.fillRect((x + q) * scale, (y + q) * scale, scale, scale);
+            return true;
+        }
+
+        // ---------- helpers
+        const $ = s => document.querySelector(s);
+        const money = n => new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(n);
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        const ymd = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+        const stripTime = t => String(t).slice(0, 5);
+        let MENU = [], db = { orders: [], expenses: [] }, cart = [], cat = "", info = null, lastJson = "", lastNew = -1, timer = null, audio = null;
+
+        async function api(path, body) {
+            const opt = body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
+            const r = await fetch(path, opt);
+            if (r.status === 401) { showLogin(); throw new Error("PIN required") }
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(j.error || "Request failed");
+            return j;
+        }
+        function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2600) }
+        function beep() { try { if (!audio) return; const o = audio.createOscillator(), g = audio.createGain(); o.frequency.value = 880; g.gain.value = .15; o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + .25) } catch (e) { } }
+
+        // ---------- login
+        function showLogin() { clearInterval(timer); $("#login").hidden = false; $("#pin").value = ""; setTimeout(() => $("#pin").focus(), 50) }
+        $("#lf").onsubmit = async e => {
+            e.preventDefault();
+            try { audio = audio || new (window.AudioContext || window.webkitAudioContext)() } catch (x) { }
+            try {
+                const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: $("#pin").value }) });
+                const j = await r.json();
+                if (!r.ok) { $("#lerr").textContent = j.error || "Wrong PIN."; return }
+                $("#lerr").textContent = ""; $("#login").hidden = true; start();
+            } catch (x) { $("#lerr").textContent = "Cannot reach the server." }
+        };
+        $("#logout").onclick = async () => { try { await fetch("/api/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }) } catch (e) { } showLogin() };
+
+        // ---------- data and rendering
+        const paidDay = o => o.paid_date || o.date;
+        function totals(day) {
+            let cash = 0, card = 0, exp = 0;
+            db.orders.forEach(o => { if (o.payment && paidDay(o) === day) { if (o.payment === "Cash") cash += o.amount; else card += o.amount } });
+            db.expenses.forEach(e => { if (e.date === day) exp += e.amount });
+            return { cash, card, sales: cash + card, exp, profit: cash + card - exp }
+        }
+        const open = () => db.orders.filter(o => !o.payment && o.status !== "Cancelled");
+        function renderStats() {
+            const t = totals(ymd(new Date()));
+            $("#stats").innerHTML = [["Cash", t.cash], ["Card", t.card], ["Revenue", t.sales], ["Expenses", t.exp], ["Profit", t.profit]].map(([l, v]) => `<div><span>${l} today</span><b class="${l === "Profit" && v < 0 ? "loss" : ""}">${money(v)}</b></div>`).join("")
+        }
+        function itemsText(o) { return o.items.map(i => (i.qty > 1 ? i.qty + " × " : "") + i.name) }
+        function renderIncoming() {
+            const list = open(), fresh = list.filter(o => o.status === "New").length;
+            $("#badge").hidden = !fresh; $("#badge").textContent = fresh;
+            $("#cards").innerHTML = list.length ? list.map(o => `<div class="card ${o.status === "New" ? "new" : ""}"><h3><span>${esc(o.table)}</span><span class="tag">${esc(o.status)}</span></h3><div class="muted">Order #${o.id} · ${stripTime(o.time)} · ${o.source === "customer" ? "from phone" : "counter"}</div><ul>${itemsText(o).map(t => `<li>${esc(t)}</li>`).join("")}</ul>${o.note ? `<div><b>Note:</b> ${esc(o.note)}</div>` : ""}<div class="total" style="font-size:18px;margin:8px 0"><span>Total</span><span>${money(o.amount)}</span></div><div class="acts">${o.status === "New" ? `<button class="btn" data-a="Preparing" data-id="${o.id}">Start preparing</button>` : ""}${o.status !== "Served" ? `<button class="btn alt" data-a="Served" data-id="${o.id}">Mark served</button>` : ""}<button class="btn gold" data-a="pay" data-p="Cash" data-id="${o.id}">Paid – cash</button><button class="btn gold" data-a="pay" data-p="Card" data-id="${o.id}">Paid – card</button><button class="btn alt" data-a="Cancelled" data-id="${o.id}">Cancel</button></div></div>`).join("") : '<p class="muted">No open orders.</p>'
+        }
+        $("#cards").onclick = async e => {
+            const b = e.target.closest("button[data-a]"); if (!b) return; const id = +b.dataset.id, a = b.dataset.a;
+            try {
+                if (a === "pay") await api("/api/orders/pay", { id, payment: b.dataset.p });
+                else { if (a === "Cancelled" && !confirm("Cancel this order?")) return; await api("/api/orders/status", { id, status: a }) }
+                await refresh(true);
+            } catch (err) { toast(err.message) }
+        };
+        const tbl = (head, rows, right = []) => `<table><thead><tr>${head.map((h, i) => `<th class="${right.includes(i) ? "n" : ""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td class="${right.includes(i) ? "n" : ""}">${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+        function renderExp() {
+            const today = ymd(new Date()), l = db.expenses.filter(e => e.date === today);
+            $("#explist").innerHTML = l.length ? tbl(["Time", "Description", "Amount"], l.map(e => [stripTime(e.time), esc(e.description), money(e.amount)]), [2]) : '<p class="muted">No expenses recorded today.</p>'
+        }
+        function renderDaily() {
+            const t = totals($("#rday").value || ymd(new Date()));
+            $("#daily").innerHTML = tbl(["Item", "Amount"], [["Cash", money(t.cash)], ["Card", money(t.card)], ["Revenue", money(t.sales)], ["Expenses", money(t.exp)], ["Profit", money(t.profit)]], [1])
+        }
+        function renderWeek() {
+            const s = new Date(($("#rweek").value || ymd(new Date())) + "T00:00:00"), rows = [];
+            for (let i = 0; i < 7; i++) { const d = ymd(new Date(s.getFullYear(), s.getMonth(), s.getDate() + i)), t = totals(d); rows.push({ d, ...t }) }
+            const max = Math.max(1, ...rows.flatMap(r => [r.sales, r.profit]));
+            $("#chart").innerHTML = rows.map(r => `<div class="grp"><div class="bars"><i class="b1" style="height:${r.sales / max * 150}px" title="${money(r.sales)}"></i><i class="b2" style="height:${Math.max(0, r.profit) / max * 150}px" title="${money(r.profit)}"></i></div><small>${r.d.slice(5)}</small></div>`).join("");
+            $("#weekly").innerHTML = tbl(["Date", "Revenue", "Expenses", "Profit"], rows.map(r => [r.d, money(r.sales), money(r.exp), money(r.profit)]), [1, 2, 3])
+        }
+        function renderHist() {
+            const o = [...db.orders].reverse();
+            $("#hist").innerHTML = o.length ? tbl(["ID", "Date", "Time", "Table", "From", "Status", "Payment", "Total", "Items"], o.map(x => [x.id, x.date, stripTime(x.time), esc(x.table), x.source === "customer" ? "Phone" : "Counter", esc(x.status), x.payment ? esc(x.payment) : "Unpaid", money(x.amount), esc(itemsText(x).join(", "))]), [7]) : '<p class="muted">No orders yet.</p>'
+        }
+        function renderAll() { renderStats(); renderIncoming(); renderExp(); renderDaily(); renderWeek(); renderHist() }
+
+        // ---------- counter order (menu and cart)
+        const cats = () => [...new Set(MENU.map(m => m.category))];
+        function renderMenu() {
+            $("#cats").innerHTML = cats().map(c => `<button class="chip ${c === cat ? "on" : ""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+            $("#menu").innerHTML = MENU.map((m, i) => [m, i]).filter(([m]) => m.category === cat).map(([m, i]) => `<div class="dish"><div class="pic"><span>${m.emoji}</span>${m.image ? `<img src="/images/${encodeURIComponent(m.image)}" alt="" onerror="this.remove()">` : ""}</div><div><b>${esc(m.name)}</b><span class="price">${money(m.price)}</span></div><button class="btn" data-i="${i}">Add to order</button></div>`).join("")
+        }
+        function renderCart() {
+            $("#lines").innerHTML = cart.length ? cart.map((x, k) => `<div class="line"><div class="lt"><span>${esc(x.name)}</span><b>${money(x.price * x.qty)}</b></div><div class="lc"><span class="q"><button class="qb" data-a="minus" data-k="${k}" aria-label="Decrease ${esc(x.name)}">−</button><output>${x.qty}</output><button class="qb" data-a="plus" data-k="${k}" aria-label="Increase ${esc(x.name)}">+</button></span><button class="rm" data-a="del" data-k="${k}">Remove item</button></div></div>`).join("") : '<p class="muted">No items yet. Press “Add to order” on a dish.</p>';
+            $("#total").textContent = money(cart.reduce((s, x) => s + x.price * x.qty, 0))
+        }
+        $("#cats").onclick = e => { if (e.target.dataset.c) { cat = e.target.dataset.c; renderMenu() } };
+        $("#menu").onclick = e => { const i = e.target.dataset.i; if (i === undefined) return; const m = MENU[i], f = cart.find(x => x.name === m.name); if (f) f.qty++; else cart.push({ name: m.name, price: m.price, qty: 1 }); renderCart() };
+        $("#lines").onclick = e => {
+            const b = e.target.closest("button[data-a]"); if (!b) return; const k = +b.dataset.k, a = b.dataset.a;
+            if (a === "plus") cart[k].qty = Math.min(20, cart[k].qty + 1); else if (a === "minus" && cart[k].qty > 1) cart[k].qty--; else cart.splice(k, 1); renderCart()
+        };
+        $("#clear").onclick = () => { cart = []; renderCart() };
+        $("#checkout").onclick = async () => {
+            if (!cart.length) return toast("No items in the order yet.");
+            try {
+                const j = await api("/api/orders", { table: +$("#table").value, payment: document.querySelector("input[name=pay]:checked").value, items: cart.map(x => ({ name: x.name, qty: x.qty })) });
+                cart = []; renderCart(); await refresh(true); toast("Order saved: " + money(j.order.amount))
+            } catch (e) { toast(e.message) }
+        };
+        $("#addexp").onclick = async () => {
+            const a = parseFloat($("#ea").value); if (!(a > 0)) return toast("Enter an amount greater than 0.");
+            try { await api("/api/expenses", { amount: a, description: $("#ed").value }); $("#ea").value = ""; $("#ed").value = ""; await refresh(true); toast("Expense added.") } catch (e) { toast(e.message) }
+        };
+
+        // ---------- QR codes
+        function renderQR() {
+            const base = $("#base").value.trim().replace(/\/+$/, ""); $("#qrerr").textContent = "";
+            if (!/^https?:\/\/.+/.test(base)) { $("#qrerr").textContent = "The address must start with http:// and contain the computer's address, for example http://192.168.1.10:8000"; return }
+            if (/\/\/(localhost|127\.)/.test(base)) $("#qrerr").textContent = "Warning: localhost only works on this computer. Customers' phones need the computer's Wi-Fi address (see the server window).";
+            $("#qrgrid").innerHTML = ""; let bad = false;
+            for (let t = 1; t <= (info ? info.tables : 15); t++) {
+                const url = `${base}/order?table=${t}`, c = document.createElement("canvas");
+                if (!drawQR(c, url, 8)) { bad = true; break }
+                const d = document.createElement("div"); d.className = "qrcard"; d.innerHTML = `<b>Table ${t}</b><small>Scan to order</small>`; d.insertBefore(c, d.children[1]); const s = document.createElement("small"); s.textContent = url; d.appendChild(s); $("#qrgrid").appendChild(d);
+            }
+            if (bad) $("#qrerr").textContent = "The address is too long for a QR code. Use a shorter address.";
+        }
+        $("#mkqr").onclick = renderQR; $("#printqr").onclick = () => window.print();
+
+        // ---------- menu management
+        let ADMIN = [], editId = null, menuVer = 0;
+        async function loadMenus() {
+            const pub = await (await fetch("/api/menu")).json(), all = await api("/api/menu-all");
+            MENU = pub.menu; ADMIN = all.menu; menuVer = pub.version;
+            if (!cats().includes(cat)) cat = cats()[0] || "";
+            cart = cart.filter(x => MENU.some(m => m.name === x.name)); cart.forEach(x => { x.price = MENU.find(m => m.name === x.name).price });
+            renderMenu(); renderCart(); renderMenuAdmin();
+        }
+        const norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[đĐ]/g, "d").toLowerCase();   // "Phở" matches "pho"
+        function renderMenuAdmin() {
+            const catList = [...new Set(ADMIN.map(m => m.category))].sort((a, b) => a.localeCompare(b));
+            $("#mcats").innerHTML = catList.map(c => `<option value="${esc(c)}">`).join("");
+            const sel = $("#mfcat"), prev = sel.value;
+            sel.innerHTML = '<option value="">All categories</option>' + catList.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+            sel.value = catList.includes(prev) ? prev : "";
+            const fc = sel.value, q = norm($("#msearch").value.trim()), scope = fc ? ADMIN.filter(m => m.category === fc) : ADMIN;
+            const rows = scope.filter(m => !q || norm(m.name).includes(q)).sort((a, b) => a.category.localeCompare(b.category) || a.id - b.id);
+            const hid = scope.filter(m => !m.available).length, prices = scope.map(m => m.price);
+            $("#msum").textContent = !ADMIN.length ? "" : (fc ? `${fc}: ${scope.length} dish${scope.length === 1 ? "" : "es"} · ${scope.length - hid} available · ${hid} hidden` + (prices.length ? ` · ${money(Math.min(...prices))} to ${money(Math.max(...prices))}` : "") : `${ADMIN.length} dishes in ${catList.length} categor${catList.length === 1 ? "y" : "ies"} · ${ADMIN.filter(m => !m.available).length} hidden`) + (q ? ` · ${rows.length} match${rows.length === 1 ? "" : "es"} for your search` : "");
+            $("#mlist").innerHTML = rows.length ? `<table><thead><tr><th>Dish</th><th>Category</th><th class="n">Price</th><th>Customers can order</th><th>Actions</th></tr></thead><tbody>${rows.map(m => `<tr class="${m.available ? "" : "hidden-row"}"><td>${esc(m.emoji)} ${esc(m.name)}${m.image ? ` <small class="muted">(${esc(m.image)})</small>` : ""}</td><td>${esc(m.category)}</td><td class="n">${money(m.price)}</td><td>${m.available ? "Yes" : "Hidden"}</td><td><button class="btn alt mbtn" data-m="edit" data-id="${m.id}">Edit</button><button class="btn alt mbtn" data-m="toggle" data-id="${m.id}">${m.available ? "Hide" : "Show"}</button><button class="btn red mbtn" data-m="del" data-id="${m.id}">Delete</button></td></tr>`).join("")}</tbody></table>` : `<p class="muted">${ADMIN.length ? "No dishes match your search." : "The menu is empty. Add your first dish above."}</p>`;
+        }
+        function resetMenuForm() { editId = null; $("#mform").reset(); $("#mavail").checked = true; $("#mtitle").textContent = "Add a dish"; $("#msave").textContent = "Add dish"; $("#mcancel").hidden = true; $("#merr").textContent = "" }
+        $("#mcancel").onclick = resetMenuForm;
+        $("#msearch").oninput = renderMenuAdmin; $("#mfcat").onchange = renderMenuAdmin;
+        $("#mform").onsubmit = async e => {
+            e.preventDefault(); $("#merr").textContent = "";
+            try {
+                const r = await api("/api/menu/save", { id: editId, name: $("#mname").value, category: $("#mcat").value, price: parseFloat($("#mprice").value), emoji: $("#memoji").value, image: $("#mimg").value, available: $("#mavail").checked });
+                if ($("#mfcat").value && $("#mfcat").value !== r.item.category) $("#mfcat").value = "";   // make sure the saved dish stays visible
+                { const q = norm($("#msearch").value.trim()); if (q && !norm(r.item.name).includes(q)) $("#msearch").value = "" }
+                toast(editId === null ? "Dish added." : "Dish updated."); resetMenuForm(); await loadMenus();
+            } catch (err) { $("#merr").textContent = err.message }
+        };
+        $("#mlist").onclick = async e => {
+            const b = e.target.closest("button[data-m]"); if (!b) return; const id = +b.dataset.id, m = ADMIN.find(x => x.id === id); if (!m) return;
+            try {
+                if (b.dataset.m === "edit") { editId = id; $("#mname").value = m.name; $("#mcat").value = m.category; $("#mprice").value = m.price; $("#memoji").value = m.emoji; $("#mimg").value = m.image; $("#mavail").checked = m.available; $("#mtitle").textContent = "Edit dish"; $("#msave").textContent = "Save changes"; $("#mcancel").hidden = false; $("#merr").textContent = ""; $("#mname").focus(); window.scrollTo({ top: 0, behavior: "smooth" }) }
+                else if (b.dataset.m === "toggle") { await api("/api/menu/save", { ...m, available: !m.available }); await loadMenus(); toast(m.available ? "Dish hidden." : "Dish shown.") }
+                else if (confirm(`Delete "${m.name}" from the menu? Past orders are not affected.`)) { await api("/api/menu/delete", { id }); if (editId === id) resetMenuForm(); await loadMenus(); toast("Dish deleted.") }
+            } catch (err) { toast(err.message) }
+        };
+
+        // ---------- tabs, polling, start
+        $("#tabs").onclick = e => { const t = e.target.closest("button")?.dataset.t; if (!t) return; document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t)); document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + t)); if (t === "qr" && !$("#qrgrid").children.length) renderQR() };
+        $("#rday").onchange = renderDaily; $("#rweek").onchange = renderWeek;
+
+        async function refresh(force) {
+            const j = await api("/api/data"), s = JSON.stringify(j);
+            if (!force && s === lastJson) return; lastJson = s; db = j;
+            if (menuVer && j.menuVersion !== menuVer) await loadMenus();
+            const fresh = open().filter(o => o.status === "New");
+            if (lastNew >= 0 && fresh.length > lastNew) { beep(); toast("New order: " + fresh[fresh.length - 1].table) }
+            lastNew = fresh.length; renderAll();
+        }
+        async function start() {
+            try {
+                info = await api("/api/info"); await loadMenus();
+                $("#base").value = `http://${info.ip}:${info.port}`;
+                $("#table").innerHTML = Array.from({ length: info.tables }, (_, i) => `<option value="${i + 1}">Table ${i + 1}</option>`).join("");
+                $("#rday").value = ymd(new Date()); $("#rweek").value = ymd(new Date(Date.now() - 6 * 864e5)); $("#today").textContent = new Date().toLocaleDateString("en-AU");
+                renderMenu(); renderCart(); lastNew = -1; await refresh(true);
+                clearInterval(timer); timer = setInterval(() => refresh(false).catch(() => { }), 4000);
+            } catch (e) { if (e.message !== "PIN required") toast("Cannot reach the server.") }
+        }
+        (async () => { try { const j = await (await fetch("/api/me")).json(); if (j.staff) start(); else showLogin() } catch (e) { showLogin(); $("#lerr").textContent = "Cannot reach the server." } })();
+    </script>
+</body>
+</html>

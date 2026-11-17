@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cơm Nhà – Order at your table</title>
+    <style>
+        :root {
+            --jade: #1f4d3a;
+            --jade2: #2d6a50;
+            --rice: #fbfbf6;
+            --line: #d9d4c3;
+            --ink: #23302a;
+            --mute: #5f6862;
+            --chili: #c8322a;
+            --gold: #b8923a;
+            --soft: #eef2ea
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--rice);
+            color: var(--ink);
+            font: 16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+            padding-bottom: 84px
+        }
+
+        header {
+            background: var(--jade);
+            color: #fff;
+            padding: 14px 16px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        header p {
+            margin: 2px 0 0;
+            opacity: .9;
+            font-size: 14px
+        }
+
+        main {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 12px 16px
+        }
+
+        .chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 10px
+        }
+
+        .chip {
+            flex: none;
+            border: 1px solid var(--line);
+            background: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font: inherit;
+            cursor: pointer
+        }
+
+            .chip.on {
+                background: var(--jade2);
+                color: #fff;
+                border-color: var(--jade2)
+            }
+
+        .dish {
+            display: grid;
+            grid-template-columns: 64px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .pic {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            background: var(--soft);
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            font-size: 30px
+        }
+
+            .pic img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover
+            }
+
+        .dish b {
+            display: block
+        }
+
+        .price {
+            color: var(--chili);
+            font-weight: 700
+        }
+
+        .btn {
+            border: 0;
+            background: var(--jade);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px
+        }
+
+            .btn.alt {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid var(--line)
+            }
+
+            .btn[disabled] {
+                opacity: .5
+            }
+
+        .q {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff
+        }
+
+            .q button {
+                border: 0;
+                background: var(--soft);
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+                cursor: pointer
+            }
+
+            .q output {
+                min-width: 34px;
+                text-align: center;
+                font-weight: 700
+            }
+
+        button:focus-visible, textarea:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 2px
+        }
+
+        .bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            border-top: 1px solid var(--line);
+            padding: 10px 16px
+        }
+
+            .bar .btn {
+                width: 100%;
+                max-width: 640px;
+                display: block;
+                margin: 0 auto
+            }
+
+        .sheet {
+            position: fixed;
+            inset: 0;
+            background: var(--rice);
+            overflow: auto;
+            padding: 16px;
+            display: none
+        }
+
+            .sheet.on {
+                display: block
+            }
+
+            .sheet .in {
+                max-width: 640px;
+                margin: 0 auto
+            }
+
+        .line {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--line)
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 14px 0;
+            color: var(--chili)
+        }
+
+        textarea {
+            width: 100%;
+            font: inherit;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            min-height: 64px
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: var(--mute);
+            margin: 10px 0 4px
+        }
+
+        .err {
+            color: var(--chili);
+            font-weight: 600;
+            min-height: 1.4em
+        }
+
+        .muted {
+            color: var(--mute)
+        }
+
+        .steps {
+            display: flex;
+            gap: 6px;
+            margin: 16px 0
+        }
+
+            .steps div {
+                flex: 1;
+                text-align: center;
+                padding: 8px 4px;
+                border-radius: 8px;
+                background: var(--soft);
+                font-size: 14px;
+                color: var(--mute)
+            }
+
+                .steps div.on {
+                    background: var(--jade);
+                    color: #fff;
+                    font-weight: 700
+                }
+
+        .big {
+            font-size: 44px;
+            text-align: center
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Cơm Nhà</h1><p id="who">Order at your table</p></header>
+    <div id="upd" role="status" hidden style="background:#fff3cd;color:#4d3b00;padding:10px 16px;font-size:14px"></div>
+    <main id="main"></main>
+    <div class="bar" id="bar" hidden><button class="btn" id="view"></button></div>
+
+    <div class="sheet" id="cart">
+        <div class="in">
+            <h2 style="margin-top:0">Your order</h2>
+            <div id="lines"></div>
+            <div class="total"><span>Total</span><span id="total"></span></div>
+            <label for="note">Note for the kitchen (optional)</label>
+            <textarea id="note" maxlength="100" placeholder="For example: no peanuts"></textarea>
+            <p class="muted" style="font-size:14px">Prices are in AUD. You pay at the counter when you are finished.</p>
+            <p class="err" id="err" role="alert"></p>
+            <button class="btn" id="send" style="width:100%">Send order to the kitchen</button>
+            <button class="btn alt" id="back" style="width:100%;margin-top:8px">Back to menu</button>
+        </div>
+    </div>
+
+    <div class="sheet" id="done">
+        <div class="in">
+            <div class="big" aria-hidden="true">✅</div>
+            <h2 style="text-align:center;margin:4px 0">Order sent</h2>
+            <p style="text-align:center" id="dtxt"></p>
+            <div class="steps" id="steps" aria-live="polite"><div data-s="New">Received</div><div data-s="Preparing">Preparing</div><div data-s="Served">Served</div></div>
+            <p class="muted" style="text-align:center">Please pay at the counter. A staff member will confirm your payment.</p>
+            <button class="btn" id="more" style="width:100%">Order more</button>
+        </div>
+    </div>
+
+    <script>
+        const $ = s => document.querySelector(s);
+        const money = n => new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(n);
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        const table = parseInt(new URLSearchParams(location.search).get("table"), 10);
+        let MENU = [], cart = {}, cat = "", poll = null, orderId = null, menuVer = 0;
+        const cats = () => [...new Set(MENU.map(m => m.category))];
+        const count = () => Object.values(cart).reduce((s, q) => s + q, 0);
+        const total = () => MENU.reduce((s, m) => s + (cart[m.name] || 0) * m.price, 0);
+
+        function renderMenu() {
+            if (!MENU.length) { $("#main").innerHTML = '<p class="muted">The menu is empty right now. Please ask a staff member.</p>'; renderBar(); return }
+            $("#main").innerHTML = '<div class="chips" role="tablist">' + cats().map(c => `<button class="chip ${c === cat ? "on" : ""}" data-c="${esc(c)}">${esc(c)}</button>`).join("") + '</div>' +
+                MENU.filter(m => m.category === cat).map(m => {
+                    const q = cart[m.name] || 0; return `<div class="dish"><div class="pic"><span>${m.emoji}</span>${m.image ? `<img src="/images/${encodeURIComponent(m.image)}" alt="" onerror="this.remove()">` : ""}</div><div><b>${esc(m.name)}</b><span class="price">${money(m.price)}</span></div>` +
+                        (q ? `<span class="q"><button data-n="${esc(m.name)}" data-d="-1" aria-label="Remove one ${esc(m.name)}">−</button><output>${q}</output><button data-n="${esc(m.name)}" data-d="1" aria-label="Add one ${esc(m.name)}">+</button></span>` : `<button class="btn" data-n="${esc(m.name)}" data-d="1">Add</button>`) + `</div>`
+                }).join("");
+            renderBar();
+        }
+        function renderBar() {
+            const c = count(); $("#bar").hidden = !c; $("#view").textContent = c ? `View order (${c}) · ${money(total())}` : "";
+        }
+        function renderCart() {
+            $("#lines").innerHTML = MENU.filter(m => cart[m.name]).map(m => `<div class="line"><div><b>${esc(m.name)}</b><br><span class="muted">${money(m.price)} each</span></div><span class="q"><button data-n="${esc(m.name)}" data-d="-1" aria-label="Remove one ${esc(m.name)}">−</button><output>${cart[m.name]}</output><button data-n="${esc(m.name)}" data-d="1" aria-label="Add one ${esc(m.name)}">+</button></span></div>`).join("") || '<p class="muted">Your order is empty.</p>';
+            $("#total").textContent = money(total()); $("#send").disabled = !count();
+        }
+        function change(name, d) {
+            const q = Math.max(0, Math.min(20, (cart[name] || 0) + d));
+            if (q) cart[name] = q; else delete cart[name];
+            renderMenu(); renderCart();
+        }
+        document.addEventListener("click", e => {
+            const c = e.target.closest("[data-c]"); if (c) { cat = c.dataset.c; renderMenu(); return }
+            const b = e.target.closest("[data-n]"); if (b) change(b.dataset.n, +b.dataset.d);
+        });
+        $("#view").onclick = () => { renderCart(); $("#err").textContent = ""; $("#cart").classList.add("on") };
+        $("#back").onclick = () => $("#cart").classList.remove("on");
+
+        async function send() {
+            $("#send").disabled = true; $("#err").textContent = "";
+            try {
+                const r = await fetch("/api/customer-order", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ table, note: $("#note").value, items: Object.entries(cart).map(([name, qty]) => ({ name, qty })) }) });
+                const j = await r.json();
+                if (!r.ok) throw new Error(j.error || "Could not send the order.");
+                orderId = j.id; try { sessionStorage.setItem("comnha_order", String(orderId)) } catch (e) { }
+                cart = {}; $("#note").value = ""; $("#cart").classList.remove("on");
+                $("#dtxt").textContent = `Order #${j.id} for Table ${table} · ${money(j.amount)}`;
+                $("#done").classList.add("on"); renderMenu(); track();
+            } catch (e) { $("#err").textContent = e.message || "Could not reach the restaurant. Check that you are on the restaurant Wi-Fi."; $("#send").disabled = !count(); if (/no longer available/.test(e.message || "")) syncMenu() }
+        }
+        $("#send").onclick = send;
+        $("#more").onclick = () => { clearInterval(poll); orderId = null; $("#done").classList.remove("on") };
+
+        function track() {
+            clearInterval(poll);
+            const upd = async () => {
+                try {
+                    const j = await (await fetch("/api/order-status?id=" + orderId)).json();
+                    const order = ["New", "Preparing", "Served"], i = order.indexOf(j.status);
+                    document.querySelectorAll("#steps div").forEach(d => d.classList.toggle("on", order.indexOf(d.dataset.s) <= i && i >= 0));
+                    if (j.status === "Cancelled") { $("#dtxt").textContent = "This order was cancelled. Please ask a staff member." }
+                    if (j.paid || j.status === "Cancelled" || j.status === "Served" && j.paid) clearInterval(poll);
+                } catch (e) { }
+            };
+            upd(); poll = setInterval(upd, 5000);
+        }
+
+        async function init() {
+            if (!(table >= 1)) { $("#main").innerHTML = '<h2>Please scan the QR code on your table</h2><p class="muted">This page needs a table number, which is included in the QR code.</p>'; return }
+            $("#who").textContent = "Table " + table + " · order from your phone";
+            try {
+                const j = await (await fetch("/api/menu")).json();
+                MENU = j.menu;
+                if (table > j.tables) { $("#main").innerHTML = '<h2>This table number does not exist</h2><p class="muted">Please ask a staff member for help.</p>'; return }
+                menuVer = j.version; cat = cats()[0] || ""; renderMenu();
+            } catch (e) { $("#main").innerHTML = '<h2>Cannot reach the restaurant</h2><p class="muted">Please check that your phone is connected to the restaurant Wi-Fi, then reload this page.</p>' }
+        }
+        async function syncMenu() {
+            try {
+                const j = await (await fetch("/api/menu")).json(); if (j.version === menuVer) return;
+                menuVer = j.version; MENU = j.menu;
+                const gone = Object.keys(cart).filter(n => !MENU.some(m => m.name === n)); gone.forEach(n => delete cart[n]);
+                if (!cats().includes(cat)) cat = cats()[0] || "";
+                renderMenu(); if ($("#cart").classList.contains("on")) renderCart();
+                const u = $("#upd"); u.textContent = "The menu was updated." + (gone.length ? " Unavailable items were removed from your order: " + gone.join(", ") + "." : ""); u.hidden = false; clearTimeout(syncMenu.t); syncMenu.t = setTimeout(() => { u.hidden = true }, 10000);
+            } catch (e) { }
+        }
+        setInterval(syncMenu, 30000); document.addEventListener("visibilitychange", () => { if (!document.hidden && menuVer) syncMenu() });
+        init();
+    </script>
+</body>
+</html>
