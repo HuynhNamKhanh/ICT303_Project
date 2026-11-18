@@ -1,37 +1,37 @@
 [
  {
   "category": "Main courses",
-  "name": "Special Beef Pho",
-  "price": 18.0,
-  "image": "pho.png",
+  "name": "Hủ Tiếu / Mì Thập Cẩm (Mekong Noodles Soup)",
+  "price": 19.0,
+  "image": "",
   "emoji": "🍜",
   "available": true,
   "id": 1
  },
  {
   "category": "Main courses",
-  "name": "Grilled Pork Chop Rice",
-  "price": 19.5,
-  "image": "pork_rice.png",
-  "emoji": "🍚",
+  "name": "Mì Xào (Stir-fried Egg Noodles)",
+  "price": 21.0,
+  "image": "",
+  "emoji": "🍽️",
   "available": true,
   "id": 2
  },
  {
   "category": "Main courses",
-  "name": "Hanoi Bun Cha",
-  "price": 18.0,
-  "image": "buncha.png",
-  "emoji": "🍖",
+  "name": "Mì Sủi Cảo (Egg Noodles & Dumpling Soup)",
+  "price": 21.0,
+  "image": "",
+  "emoji": "🍽️",
   "available": true,
   "id": 3
  },
  {
   "category": "Main courses",
-  "name": "Seafood Fried Noodles",
-  "price": 21.5,
-  "image": "noodles.png",
-  "emoji": "🍝",
+  "name": "Phở Trộn (Dry Mixed Pho)",
+  "price": 19.0,
+  "image": "",
+  "emoji": "🍽️",
   "available": true,
   "id": 4
  },
@@ -97,5 +97,14 @@
   "emoji": "🍲",
   "available": true,
   "id": 11
+ },
+ {
+  "category": "Drinks",
+  "name": "Fanta",
+  "price": 4.5,
+  "image": "",
+  "emoji": "🍽️",
+  "available": true,
+  "id": 12
  }
 ]

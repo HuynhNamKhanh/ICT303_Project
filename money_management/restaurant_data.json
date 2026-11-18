@@ -87,6 +87,121 @@
    "note": "",
    "paid_date": "2026-11-18",
    "paid_time": "01:29:49"
+  },
+  {
+   "id": 5,
+   "table": "Table 1",
+   "date": "2026-11-18",
+   "time": "09:06:31",
+   "amount": 19.0,
+   "payment": "Cash",
+   "status": "Served",
+   "source": "customer",
+   "items": [
+    {
+     "name": "Hủ Tiếu / Mì Thập Cẩm (Mekong Noodles Soup)",
+     "price": 19.0,
+     "qty": 1
+    }
+   ],
+   "note": "",
+   "paid_date": "2026-11-18",
+   "paid_time": "09:06:59"
+  },
+  {
+   "id": 6,
+   "table": "Table 2",
+   "date": "2026-11-18",
+   "time": "09:20:08",
+   "amount": 72.0,
+   "payment": "Cash",
+   "status": "Served",
+   "source": "customer",
+   "items": [
+    {
+     "name": "Mì Xào (Stir-fried Egg Noodles)",
+     "price": 21.0,
+     "qty": 1
+    },
+    {
+     "name": "Mì Sủi Cảo (Egg Noodles & Dumpling Soup)",
+     "price": 21.0,
+     "qty": 1
+    },
+    {
+     "name": "Phở Trộn (Dry Mixed Pho)",
+     "price": 19.0,
+     "qty": 1
+    },
+    {
+     "name": "Ice Tea",
+     "price": 4.0,
+     "qty": 1
+    },
+    {
+     "name": "Fresh Orange Juice",
+     "price": 7.0,
+     "qty": 1
+    }
+   ],
+   "note": "",
+   "paid_date": "2026-11-18",
+   "paid_time": "09:20:17"
+  },
+  {
+   "id": 7,
+   "table": "Table 2",
+   "date": "2026-11-18",
+   "time": "09:20:47",
+   "amount": 10.5,
+   "payment": "Card",
+   "status": "Served",
+   "source": "customer",
+   "items": [
+    {
+     "name": "Spring Rolls",
+     "price": 10.5,
+     "qty": 1
+    }
+   ],
+   "note": "",
+   "paid_date": "2026-11-18",
+   "paid_time": "09:24:47"
+  },
+  {
+   "id": 8,
+   "table": "Table 2",
+   "date": "2026-11-18",
+   "time": "09:21:31",
+   "amount": 31.5,
+   "payment": "Card",
+   "status": "Served",
+   "source": "customer",
+   "items": [
+    {
+     "name": "Spring Rolls",
+     "price": 10.5,
+     "qty": 1
+    },
+    {
+     "name": "Crab Soup",
+     "price": 12.5,
+     "qty": 1
+    },
+    {
+     "name": "Coca Cola",
+     "price": 4.5,
+     "qty": 1
+    },
+    {
+     "name": "Ice Tea",
+     "price": 4.0,
+     "qty": 1
+    }
+   ],
+   "note": "",
+   "paid_date": "2026-11-18",
+   "paid_time": "09:24:50"
   }
  ],
  "expenses": []
